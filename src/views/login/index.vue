@@ -169,12 +169,17 @@
       padding: 32px 0;
       text-align: center;
       margin-bottom: 60px;
-      margin-top: 120px;
+      margin-top: 80px;
 
       &-logo img {
         display: inline-block;
         width: 240px;
       }
+    }
+
+    &-form {
+      padding: 20px;
+      background-color: #fff;
     }
 
     &-other {
