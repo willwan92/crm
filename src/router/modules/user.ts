@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { HomeFilled } from '@vicons/antd';
+import { UserOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
 
 /**
@@ -15,30 +15,29 @@ import { renderIcon } from '@/utils/index';
  * */
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/home',
-    name: 'home',
+    path: '/user',
+    name: 'user',
     component: Layout,
     meta: {
       sort: 1,
       isRoot: true,
-      title:"系统首页",
-      activeMenu: 'home_index',
-      icon: renderIcon(HomeFilled),
-      showIn:['system','business','audit']
+      activeMenu: 'user_index',
+      icon: renderIcon(UserOutlined),
+      showIn: [''],
     },
     children: [
       {
         path: 'index',
-        name: `home_index`,
+        name: `user_index`,
         meta: {
-          title: '系统首页',
-          activeMenu: 'home_index',
-          showIn:['system','business','audit']
+          title: '用户管理',
+          activeMenu: 'user_index',
+          showIn: [''],
         },
-        component: () => import('@/views/home/index.vue'),
-      }
+        component: () => import('@/views/user/index.vue'),
+      },
     ],
-  }
+  },
 ];
 
 export default routes;

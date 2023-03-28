@@ -58,12 +58,13 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     server: {
       host: true,
       port: VITE_PORT,
-      // proxy: createProxy(VITE_PROXY),
+      //   proxy: createProxy(VITE_PROXY),
       proxy: {
-        '/api': {
+        '/crms/api': {
           target: 'http://39.103.206.77:4399',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
+          //   target: 'http://47.92.64.96',
+          changeOrigin: false,
+          rewrite: (path) => path.replace(/^\/crms\/api/, ''),
         },
       },
     },

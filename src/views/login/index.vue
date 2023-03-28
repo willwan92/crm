@@ -74,6 +74,7 @@
   import { websiteConfig } from '@/config/website.config';
   import { storage } from '@/utils/Storage';
   import { TABS_ROUTES } from '@/store/mutation-types';
+  import { useGlobSetting } from '@/hooks/setting';
 
   interface FormState {
     userName: string;
@@ -90,11 +91,14 @@
     usernameRef.value.focus();
   });
 
+  const globSetting = useGlobSetting();
+  const urlPrefix = globSetting.urlPrefix || '';
+
   const formInline = reactive({
     userName: '',
     password: '',
     verCode: '',
-    captchaUrl: '/api/sys/captcha',
+    captchaUrl: `${urlPrefix}/sys/captcha`,
   });
 
   const rules = {
@@ -108,7 +112,7 @@
   const router = useRouter();
   const route = useRoute();
   const refreshCaptach = () => {
-    formInline.captchaUrl = `/api/sys/captcha?t=${Date.now()}`;
+    formInline.captchaUrl = `${urlPrefix}/sys/captcha?t=${Date.now()}`;
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -123,21 +127,19 @@
         loading.value = true;
         const params: FormState = {
           userName,
-          password: md5(userName + md5(password)),
+          password: md5(userName + md5(password)) as string,
           verCode,
         };
         try {
-          const res = await userStore.login(params);
+          await userStore.login(params);
           message.destroyAll();
-          if (res.code == ResultEnum.SUCCESS) {
-            storage.remove(TABS_ROUTES);
-            // const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
-            message.success('登录成功，即将进入系统');
-            if (route.name === LOGIN_NAME) {
-              router.replace('/');
-            } else {
-              router.replace('/home/index');
-            }
+          storage.remove(TABS_ROUTES);
+          // const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
+          message.success('登录成功，即将进入系统');
+          if (route.name === LOGIN_NAME) {
+            router.replace('/');
+          } else {
+            router.replace(PageEnum.BASE_HOME);
           }
         } catch (error) {
           refreshCaptach();

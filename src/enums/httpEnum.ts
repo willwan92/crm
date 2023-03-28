@@ -2,10 +2,11 @@
  * @description: 请求结果集
  */
 export enum ResultEnum {
-  SUCCESS = 0,
+  SUCCESS = 200,
+  CREATED = 201,
   ERROR = -1,
-  TIMEOUT = 401,
-  TYPE = 'success',
+  UNAUTHORIZED = 401,
+  FORBIDDEN = 403,
 }
 
 /**

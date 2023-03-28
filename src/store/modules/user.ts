@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia';
 import { store } from '@/store';
 import { ACCESS_TOKEN, CURRENT_USER, IS_LOCKSCREEN } from '@/store/mutation-types';
-import { ResultEnum } from '@/enums/httpEnum';
 
 import { login, logoutReq } from '@/api/auth';
-import { getUserRequest, getUserList } from '@/api/system/user';
+import { getUserRequest, getUserList } from '@/api/user';
 import { storage } from '@/utils/Storage';
 
 export interface IUserState {
@@ -58,18 +57,15 @@ export const useUserStore = defineStore({
     // 登录
     async login(userInfo) {
       try {
-        const response = await login(userInfo);
-        const { result, code } = response;
-        if (code === ResultEnum.SUCCESS) {
-          const ex = 7 * 24 * 60 * 60 * 1000;
-          storage.removeCookie('token');
-          storage.set(ACCESS_TOKEN, result.token, ex);
-          storage.set(CURRENT_USER, result, ex);
-          storage.set(IS_LOCKSCREEN, false);
-          this.setToken(result.token);
-          this.setUserInfo(result);
-        }
-        return Promise.resolve(response);
+        const result = await login(userInfo);
+        console.log(result);
+        const ex = 7 * 24 * 60 * 60 * 1000;
+        storage.removeCookie('token');
+        storage.set(ACCESS_TOKEN, result.token, ex);
+        storage.set(CURRENT_USER, result.accuntVO, ex);
+        storage.set(IS_LOCKSCREEN, false);
+        this.setToken(result.token);
+        this.setUserInfo(result.accuntVO);
       } catch (e) {
         return Promise.reject(e);
       }

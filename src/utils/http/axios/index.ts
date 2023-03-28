@@ -47,7 +47,6 @@ const transform: AxiosTransform = {
     }
 
     const { data } = res;
-
     const $dialog = window['$dialog'];
     const $message = window['$message'];
 
@@ -55,18 +54,16 @@ const transform: AxiosTransform = {
       // return '[HTTP] Request has no return value';
       throw new Error('请求出错，请稍候重试');
     }
-    //  这里 code，result，message为 后台统一的字段，需要修改为项目自己的接口返回格式
-    const { code, result, message } = data;
-    // 请求成功
-    const hasSuccess = data && (code === ResultEnum.SUCCESS || code === undefined);
 
+    const hasSuccess = data.success;
+    const message = (data.errors && data.errors[0] && data.errors[0].message) || '';
     // 是否显示提示信息
     if (isShowMessage) {
       if (hasSuccess && (successMessageText || isShowSuccessMessage)) {
         // 是否显示自定义信息提示
         $dialog.success({
           type: 'success',
-          content: successMessageText || message || '操作成功！',
+          content: successMessageText || '操作成功！',
         });
       } else if (!hasSuccess && options.errorMessageMode !== 'modal') {
         // 是否显示自定义信息提示
@@ -84,21 +81,22 @@ const transform: AxiosTransform = {
 
     // 接口请求错误，统一提示错误信息 这里逻辑可以根据项目进行修改
     let errorMsg = message;
+    const code = res.status;
     switch (code) {
       // 请求失败
       case ResultEnum.ERROR:
         $message.error(errorMsg);
         break;
       // 登录超时
-      case ResultEnum.TIMEOUT:
+      case ResultEnum.UNAUTHORIZED:
         const LoginName = PageEnum.BASE_LOGIN_NAME;
         const LoginPath = PageEnum.BASE_LOGIN;
         if (router.currentRoute.value?.name === LoginName) return;
         // 到登录页
-        errorMsg = '登录超时，请重新登录!';
+        errorMsg = '未登录或登录超时，登录!';
         $dialog.warning({
           title: '提示',
-          content: '登录身份已失效，请重新登录!',
+          content: errorMsg,
           positiveText: '确定',
           //negativeText: '取消',
           closable: false,
@@ -113,17 +111,12 @@ const transform: AxiosTransform = {
     }
 
     // 不进行任何处理，直接返回
-    // 用于页面代码可能需要直接获取code，data，message这些信息时开启
-    if (!isTransformResponse && hasSuccess) {
-      return res.data;
+    if (!isTransformResponse) {
+      return data;
+    } else if (isTransformResponse) {
+      return data.data;
     }
 
-    // 接口请求成功，直接返回结果
-    if (code === ResultEnum.SUCCESS) {
-      return result;
-    } else if(code === 455){
-      return res.data;
-    }
     throw new Error(errorMsg);
   },
 

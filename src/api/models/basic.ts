@@ -9,9 +9,3 @@ export interface PageResponse<T = any> {
   total: number;
   data: T[];
 }
-
-export interface BasicResponse<T = any> {
-  code: number;
-  message?: string;
-  result: T;
-}

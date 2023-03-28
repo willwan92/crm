@@ -12,7 +12,7 @@ const LOGIN_PATH = PageEnum.BASE_LOGIN;
 const whitePathList = [LOGIN_PATH]; // no redirect whitelist
 
 export function createRouterGuards(router: Router) {
-  const userStore = useUserStoreWidthOut();
+  //   const userStore = useUserStoreWidthOut();
   const asyncRouteStore = useAsyncRouteStoreWidthOut();
   router.beforeEach(async (to, from, next) => {
     const Loading = window['$loading'] || null;
@@ -52,19 +52,14 @@ export function createRouterGuards(router: Router) {
       return;
     }
 
-    const userInfo = await userStore.GetInfo();
-    if(userInfo.role === 'default'){
-      next({
-        path:"init"
-      })
-    }
+    // const userInfo = await userStore.GetInfo();
 
-    const routes = await asyncRouteStore.generateRoutes(userInfo);
+    // const routes = await asyncRouteStore.generateRoutes(userInfo);
 
     // 动态添加可访问路由表
-    routes.forEach((item) => {
-      router.addRoute(item as unknown as RouteRecordRaw);
-    });
+    // routes.forEach((item) => {
+    //   router.addRoute(item as unknown as RouteRecordRaw);
+    // });
 
     //添加404
     const isErrorPage = router.getRoutes().findIndex((item) => item.name === ErrorPageRoute.name);

@@ -57,9 +57,14 @@ export interface RequestOptions {
   withToken?: boolean;
 }
 
-export interface Result<T = any> {
-  code: number;
-  type?: 'success' | 'error' | 'warning';
+interface error {
+  code: string;
   message: string;
-  result?: T;
+  arguments: [];
+}
+
+export interface Result<T = any> {
+  success: boolean;
+  data?: T;
+  errors?: error[];
 }

@@ -1,19 +1,15 @@
 import { http } from '@/utils/http/axios';
+import { RequestEnum } from '@/enums/httpEnum';
 
 /**
  * @description: 用户登录
  */
-export function login(params) {
-  return http.request(
-    {
-      url: '/sys/login',
-      method: 'post',
-      params,
-    },
-    {
-      isTransformResponse: false,
-    }
-  );
+export function login(data) {
+  return http.request({
+    url: '/sys/login',
+    method: RequestEnum.POST,
+    data,
+  });
 }
 
 /**
@@ -23,7 +19,7 @@ export function logoutReq(params) {
   return http.request(
     {
       url: '/sys/logout',
-      method: 'post',
+      method: RequestEnum.POST,
       params,
     },
     {
