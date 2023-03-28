@@ -15,9 +15,9 @@
           :model="formInline"
           :rules="rules"
         >
-          <n-form-item path="username">
+          <n-form-item path="userName">
             <n-input
-              v-model:value="formInline.username"
+              v-model:value="formInline.userName"
               ref="usernameRef"
               placeholder="请输入用户名"
             >
@@ -42,8 +42,8 @@
               </template>
             </n-input>
           </n-form-item>
-          <n-form-item path="captcha">
-            <n-input v-model:value="formInline.captcha" placeholder="请输入验证码"></n-input>
+          <n-form-item path="verCode">
+            <n-input v-model:value="formInline.verCode" placeholder="请输入验证码" />
             <img
               class="captcha-img"
               @click="refreshCaptach"
@@ -65,6 +65,7 @@
 <script lang="ts" setup>
   import { reactive, ref, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import md5 from 'md5';
   import { useUserStore } from '@/store/modules/user';
   import { useMessage } from 'naive-ui';
   import { ResultEnum } from '@/enums/httpEnum';
@@ -75,9 +76,9 @@
   import { TABS_ROUTES } from '@/store/mutation-types';
 
   interface FormState {
-    username: string;
+    userName: string;
     password: string;
-    captcha: string;
+    verCode: string;
   }
   const usernameRef = ref();
   const formRef = ref();
@@ -90,16 +91,16 @@
   });
 
   const formInline = reactive({
-    username: '',
+    userName: '',
     password: '',
-    captcha: '',
-    captchaUrl: '/api/auth/captcha',
+    verCode: '',
+    captchaUrl: '/api/sys/captcha',
   });
 
   const rules = {
-    username: { required: true, message: '请输入用户名', trigger: 'blur' },
+    userName: { required: true, message: '请输入用户名', trigger: 'blur' },
     password: { required: true, message: '请输入密码', trigger: 'blur' },
-    captcha: { required: true, message: '请输入验证码', trigger: 'blur' },
+    verCode: { required: true, message: '请输入验证码', trigger: 'blur' },
   };
 
   const userStore = useUserStore();
@@ -107,7 +108,7 @@
   const router = useRouter();
   const route = useRoute();
   const refreshCaptach = () => {
-    formInline.captchaUrl = `/api/auth/captcha?t=${Date.now()}`;
+    formInline.captchaUrl = `/api/sys/captcha?t=${Date.now()}`;
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -117,13 +118,13 @@
     if (loading.value) return;
     formRef.value.validate(async (errors) => {
       if (!errors) {
-        const { username, password, captcha } = formInline;
+        const { userName, password, verCode } = formInline;
         message.loading('登录中...');
         loading.value = true;
         const params: FormState = {
-          username,
-          password,
-          captcha,
+          userName,
+          password: md5(userName + md5(password)),
+          verCode,
         };
         try {
           const res = await userStore.login(params);

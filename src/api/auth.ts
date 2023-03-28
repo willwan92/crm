@@ -3,10 +3,10 @@ import { http } from '@/utils/http/axios';
 /**
  * @description: 用户登录
  */
- export function login(params) {
+export function login(params) {
   return http.request(
     {
-      url: '/auth/login',
+      url: '/sys/login',
       method: 'post',
       params,
     },
@@ -19,10 +19,10 @@ import { http } from '@/utils/http/axios';
 /**
  * @description: 退出登录
  */
- export function logoutReq(params) {
+export function logoutReq(params) {
   return http.request(
     {
-      url: '/auth/logout',
+      url: '/sys/logout',
       method: 'post',
       params,
     },
