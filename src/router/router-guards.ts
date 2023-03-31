@@ -53,13 +53,15 @@ export function createRouterGuards(router: Router) {
     }
 
     // const userInfo = await userStore.GetInfo();
+    // 暂时没有获取用户信息接口
+    const userInfo = {};
 
-    // const routes = await asyncRouteStore.generateRoutes(userInfo);
+    const routes = await asyncRouteStore.generateRoutes(userInfo);
 
     // 动态添加可访问路由表
-    // routes.forEach((item) => {
-    //   router.addRoute(item as unknown as RouteRecordRaw);
-    // });
+    routes.forEach((item) => {
+      router.addRoute(item as unknown as RouteRecordRaw);
+    });
 
     //添加404
     const isErrorPage = router.getRoutes().findIndex((item) => item.name === ErrorPageRoute.name);

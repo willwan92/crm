@@ -61,8 +61,8 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       //   proxy: createProxy(VITE_PROXY),
       proxy: {
         '/crms/api': {
-          target: 'http://39.103.206.77:4399',
-          //   target: 'http://47.92.64.96',
+          //   target: 'http://39.103.206.77:4399',
+          target: 'http://47.92.64.96:4399',
           changeOrigin: false,
           rewrite: (path) => path.replace(/^\/crms\/api/, ''),
         },

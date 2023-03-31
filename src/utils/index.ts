@@ -34,8 +34,6 @@ export function renderNew(type = 'warning', text = 'New', color: object = newTag
  * 递归组装菜单格式
  */
 export function generatorMenu(routerMap: Array<any>) {
-  const userStore = useUserStore();
-  const userInfo: object = userStore.getUserInfo || {};
   return filterRouter(routerMap).map((item) => {
     const isRoot = isRootRouter(item);
     const info = isRoot ? item.children[0] : item;

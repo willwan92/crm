@@ -10,6 +10,7 @@ import { renderIcon } from '@/utils/index';
  * @param meta.disabled 禁用整个菜单
  * @param meta.title 菜单名称
  * @param meta.icon 菜单图标
+ * @param meta.permissions 有权限的角色
  * @param meta.keepAlive 缓存该路由
  * @param meta.sort 排序越小越排前
  * */
@@ -23,7 +24,6 @@ const routes: Array<RouteRecordRaw> = [
       isRoot: true,
       activeMenu: 'user_index',
       icon: renderIcon(UserOutlined),
-      showIn: [''],
     },
     children: [
       {
@@ -32,7 +32,6 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '用户管理',
           activeMenu: 'user_index',
-          showIn: [''],
         },
         component: () => import('@/views/user/index.vue'),
       },
