@@ -1,11 +1,11 @@
-export interface PageRequest {
-  pageNo: number;
+export interface PageReq {
+  pageNum: number;
   pageSize: number;
 }
 
-export interface PageResponse<T = any> {
-  pageNo: number;
-  pageSize: number;
+export interface PageRes<T = any> {
+  current: number;
+  size: number;
   total: number;
-  data: T[];
+  record: T[];
 }

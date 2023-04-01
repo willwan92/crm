@@ -1,6 +1,5 @@
 <template>
-  用户管理
-  <!-- <n-card :bordered="false" class="proCard">
+  <n-card :bordered="false" class="proCard">
     <SearchForm ref="searchFormRef" @reload-table="reloadTable" />
 
     <n-button type="info" ghost @click="showEditModal"
@@ -21,117 +20,109 @@
     />
 
     <EditModal ref="editModal" @ok="reloadTable" />
-  </n-card> -->
+  </n-card>
 </template>
 
 <script lang="ts" setup>
-  //   import { reactive, ref, h } from 'vue';
-  //   import { BasicTable } from '@/components/Table';
-  //   import { NTag } from 'naive-ui';
-  //   import { getIfaddrList, deleteIfaddr } from '@/api/system/ifaddr';
-  //   import EditModal from './components/EditModal.vue';
-  //   import SearchForm from './components/SearchForm.vue';
-  //   import { PlusOutlined } from '@vicons/antd';
-  //   import { NButton, useMessage, useDialog } from 'naive-ui';
+import { reactive, ref, h } from 'vue';
+import { BasicTable } from '@/components/Table';
+import { NTag } from 'naive-ui';
+import { getUserList, deleteUser, updateUserStatus } from '@/api/user';
+import EditModal from './components/EditModal.vue';
+import SearchForm from './components/SearchForm.vue';
+import { PlusOutlined } from '@vicons/antd';
+import { NSwitch, NButton, useMessage, useDialog } from 'naive-ui';
 
-  //   const message = useMessage();
-  //   const dialog = useDialog();
+const message = useMessage();
+const dialog = useDialog();
 
-  //   const columns = [
-  //     {
-  //       title: '接口名称',
-  //       key: 'interface',
-  //     },
-  //     {
-  //       title: '接口IP',
-  //       key: 'ip',
-  //     },
-  //     {
-  //       title: '掩码',
-  //       key: 'mask',
-  //     },
-  //     {
-  //       title: '用于管理',
-  //       key: 'admin',
-  //       render(row) {
-  //         return h(
-  //           NTag,
-  //           {
-  //             type: row.admin ? 'info' : 'default',
-  //           },
-  //           {
-  //             default: () => (row.admin ? '是' : '否'),
-  //           }
-  //         );
-  //       },
-  //     },
-  //     {
-  //       title: '是否可Ping',
-  //       key: 'ping',
-  //       render(row) {
-  //         return h(
-  //           NTag,
-  //           {
-  //             type: row.ping ? 'info' : 'default',
-  //           },
-  //           {
-  //             default: () => (row.ping ? '是' : '否'),
-  //           }
-  //         );
-  //       },
-  //     },
-  //   ];
+const columns = [
+  {
+    title: '用户姓名',
+    key: 'accountName',
+  },
+  {
+    title: '职位',
+    key: 'accountPosition',
+  },
+  {
+    title: '登录名',
+    key: 'userName',
+  },
+  {
+    title: '状态',
+    key: 'status',
+    render(row) {
+      return h(NSwitch, {
+        defaultValue: row.status === 'enable',
+        onUpdateValue: (value) => {
+          setUserStatus(row.id, value);
+        },
+      });
+    },
+  },
+];
 
-  //   const actionColumn = reactive({
-  //     width: 150,
-  //     title: '操作',
-  //     key: 'action',
-  //     align: 'center',
-  //     render(row) {
-  //       return [
-  //         h(
-  //           NButton,
-  //           {
-  //             type: 'error',
-  //             size: 'small',
-  //             ghost: true,
-  //             style: 'margin-right:5px',
-  //             onClick: () => handleDelClick(row),
-  //           },
-  //           { default: () => '删除' }
-  //         ),
-  //       ];
-  //     },
-  //   });
+const actionColumn = reactive({
+  width: 150,
+  title: '操作',
+  key: 'action',
+  align: 'center',
+  render(row) {
+    return [
+      h(
+        NButton,
+        {
+          type: 'error',
+          size: 'small',
+          ghost: true,
+          style: 'margin-right:5px',
+          onClick: () => handleDelClick(row),
+        },
+        { default: () => '删除' }
+      ),
+    ];
+  },
+});
 
-  //   function handleDelClick(row) {
-  //     dialog.warning({
-  //       title: '提示',
-  //       content: `确定要删除接口IP ${row.ip} 吗？`,
-  //       positiveText: '确定',
-  //       negativeText: '取消',
-  //       onPositiveClick: async () => {
-  //         await deleteIfaddr(row.ip);
-  //         message.success('删除成功');
-  //         reloadTable();
-  //       },
-  //     });
-  //   }
+const setUserStatus = async (userId, status) => {
+  let res = await updateUserStatus({
+    userId,
+    status: status ? 0 : 1,
+  });
+  reloadTable();
+};
 
-  //   const editModal = ref();
-  //   const showEditModal = () => {
-  //     editModal.value.show();
-  //   };
+function handleDelClick(row) {
+  dialog.warning({
+    title: '提示',
+    content: `确定要用户 ${row.accountName} 吗？`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      await deleteUser(row.userId);
+      message.success(`用户 ${row.accountName} 已删除`);
+      reloadTable();
+    },
+  });
+}
 
-  //   const searchFormRef = ref();
-  //   const loadDataTable = async (params) => {
-  //     return await getIfaddrList({ ...searchFormRef.value.searchParams, ...params });
-  //   };
+const editModal = ref();
+const showEditModal = () => {
+  editModal.value.show();
+};
 
-  //   const tableRef = ref();
-  //   function reloadTable() {
-  //     tableRef.value.reload();
-  //   }
+const searchFormRef = ref();
+const loadDataTable = async (params) => {
+  const res = await getUserList({ ...searchFormRef.value.searchParams, ...params });
+  console.log(res);
+  return res;
+};
+
+const tableRef = ref();
+function reloadTable() {
+  tableRef.value.reload();
+}
 </script>
 
 <style lang="less" scoped></style>

@@ -59,10 +59,9 @@ export const useUserStore = defineStore({
       try {
         const result = await login(userInfo);
         console.log(result);
-        const ex = 7 * 24 * 60 * 60 * 1000;
         storage.removeCookie('token');
-        storage.set(ACCESS_TOKEN, result.token, ex);
-        storage.set(CURRENT_USER, result.accuntVO, ex);
+        storage.set(ACCESS_TOKEN, result.token);
+        storage.set(CURRENT_USER, result.accuntVO);
         storage.set(IS_LOCKSCREEN, false);
         this.setToken(result.token);
         this.setUserInfo(result.accuntVO);

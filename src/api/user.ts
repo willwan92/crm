@@ -1,20 +1,9 @@
 import { http } from '@/utils/http/axios';
+import { Result } from '@/utils/http/types';
+import { RequestEnum } from '@/enums/httpEnum';
+import { PageRes } from '@/api/models/basic';
+import { QueryUserReq, QueryUserRes, UpdateUserStatusReq } from '@/api/models/user';
 
-export interface BasicResponseModel<T = any> {
-  code: number;
-  message: string;
-  result: T;
-}
-
-export interface BasicPageParams {
-  pageNumber: number;
-  pageSize: number;
-  total: number;
-}
-
-/**
- * @description: 获取用户信息
- */
 export function getUserRequest(id) {
   return http.request({
     url: `/users/${id}`,
@@ -22,119 +11,44 @@ export function getUserRequest(id) {
   });
 }
 
-/**
- *
- * @description：获取用户列表
- */
-export function getUserList(params) {
-  let paramsStr = '';
-  for(let key in params){
-    if(params[key]){
-      paramsStr += key+'='+params[key]+'&'
-    }
-  }
-  return http.request<BasicResponseModel>(
+export function getUserList(params: QueryUserReq) {
+  return http.request<Result<PageRes<QueryUserRes>>>(
     {
-      url: `/users?${paramsStr}`,
-      method: 'GET'
-    },
-    {
-      isTransformResponse: false,
+      url: '/account/list',
+      method: RequestEnum.GET,
+      params
     }
   );
 }
-/**
- *
- * @description：新增用户
- */
- export function addUserRequest(params) {
-  return http.request<BasicResponseModel>(
+
+export function saveUser(data) {
+  return http.request<Result>(
     {
-      url: `/users`,
-      method: 'POST',
-      data:params
+      url: '/account/saveAccountAndAuthorization',
+      method: RequestEnum.POST,
+      data
     },
-    {
-      isTransformResponse: false,
-    }
   );
 }
-/**
- *
- * @description：编辑用户
- */
- export function editUserRequest(id,params) {
-  return http.request<BasicResponseModel>(
+
+export function deleteUser(userId: string) {
+  return http.request<Result>(
     {
-      url: `/users/${id}`,
-      method: 'PUT',
-      data:params
+      url: '/account/delete',
+      method: RequestEnum.GET,
+      params: {
+        userId
+      }
     },
-    {
-      isTransformResponse: false,
-    }
   );
 }
-/**
- *
- * @description：删除用户
- */
- export function deleteUserRequest(id) {
-  return http.request<BasicResponseModel>(
+
+export function updateUserStatus(params: UpdateUserStatusReq) {
+  return http.request<Result>(
     {
-      url: `/users/${id}`,
-      method: 'DELETE'
+      url: '/account/slap',
+      method: RequestEnum.GET,
+      params
     },
-    {
-      isTransformResponse: false,
-    }
-  );
-}
-/**
- *
- * @description：修改用户状态
- */
- export function setUserStatusRequest(id,params) {
-  return http.request<BasicResponseModel>(
-    {
-      url: `/users/${id}/status`,
-      method: 'PATCH',
-      data:params
-    },
-    {
-      isTransformResponse: false,
-    }
-  );
-}
-/**
- *
- * @description：修改用户角色
- */
- export function setUserRoleRequest(id,params) {
-  return http.request<BasicResponseModel>(
-    {
-      url: `/users/${id}/role`,
-      method: 'PATCH',
-      data:params
-    },
-    {
-      isTransformResponse: false,
-    }
-  );
-}
-/**
- *
- * @description：修改用户密码
- */
- export function modifyPasswordRequest(id,params) {
-  return http.request<BasicResponseModel>(
-    {
-      url: `/users/${id}/password`,
-      method: 'PATCH',
-      data:params
-    },
-    {
-      isTransformResponse: false,
-    }
   );
 }
