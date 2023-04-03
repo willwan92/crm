@@ -55,7 +55,9 @@ const transform: AxiosTransform = {
       throw new Error('请求出错，请稍候重试');
     }
 
-    const hasSuccess = data.success;
+    // 请求是否成功
+    const hasSuccess = data.success && !data.errors;
+
     const message = (data.errors && data.errors[0] && data.errors[0].message) || '';
     // 是否显示提示信息
     if (isShowMessage) {
@@ -67,7 +69,7 @@ const transform: AxiosTransform = {
         });
       } else if (!hasSuccess && options.errorMessageMode !== 'modal') {
         // 是否显示自定义信息提示
-        $message.error(message || errorMessageText || '操作失败！');
+        // $message.error(message || errorMessageText || '操作失败！');
       } else if (!hasSuccess && options.errorMessageMode === 'modal') {
         // errorMessageMode=‘custom-modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
         $dialog.info({
@@ -81,7 +83,7 @@ const transform: AxiosTransform = {
 
     // 接口请求错误，统一提示错误信息 这里逻辑可以根据项目进行修改
     let errorMsg = message;
-    const code = res.status;
+    const code = data && data.errors && data.errors[0].code;
     switch (code) {
       // 请求失败
       case ResultEnum.ERROR:
@@ -113,7 +115,7 @@ const transform: AxiosTransform = {
     // 不进行任何处理，直接返回
     if (!isTransformResponse) {
       return data;
-    } else if (isTransformResponse) {
+    } else if (isTransformResponse && hasSuccess) {
       return data.data;
     }
 

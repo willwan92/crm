@@ -4,8 +4,8 @@
 export enum ResultEnum {
   SUCCESS = 200,
   CREATED = 201,
-  ERROR = -1,
-  UNAUTHORIZED = 401,
+  ERROR = "-1",
+  UNAUTHORIZED = '40002',
   FORBIDDEN = 403,
 }
 
