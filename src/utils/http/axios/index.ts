@@ -69,7 +69,7 @@ const transform: AxiosTransform = {
         });
       } else if (!hasSuccess && options.errorMessageMode !== 'modal') {
         // 是否显示自定义信息提示
-        // $message.error(message || errorMessageText || '操作失败！');
+        $message.error(message || errorMessageText || '操作失败！');
       } else if (!hasSuccess && options.errorMessageMode === 'modal') {
         // errorMessageMode=‘custom-modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
         $dialog.info({
@@ -86,9 +86,9 @@ const transform: AxiosTransform = {
     const code = data && data.errors && data.errors[0].code;
     switch (code) {
       // 请求失败
-      case ResultEnum.ERROR:
-        $message.error(errorMsg);
-        break;
+      // case ResultEnum.ERROR:
+      //   $message.error(errorMsg);
+      //   break;
       // 登录超时
       case ResultEnum.UNAUTHORIZED:
         const LoginName = PageEnum.BASE_LOGIN_NAME;
