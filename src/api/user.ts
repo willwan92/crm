@@ -4,9 +4,9 @@ import { RequestEnum } from '@/enums/httpEnum';
 import { PageRes } from '@/api/models/basic';
 import { QueryUserReq, QueryUserRes, UpdateUserStatusReq } from '@/api/models/user';
 
-export function getUserRequest(id) {
+export function getUserDetail(id) {
   return http.request({
-    url: `/users/${id}`,
+    url: `/account/detail/${id}`,
     method: 'get',
   });
 }

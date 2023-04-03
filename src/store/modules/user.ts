@@ -3,7 +3,7 @@ import { store } from '@/store';
 import { ACCESS_TOKEN, CURRENT_USER, IS_LOCKSCREEN } from '@/store/mutation-types';
 
 import { login, logoutReq } from '@/api/auth';
-import { getUserRequest, getUserList } from '@/api/user';
+import { getUserDetail, getUserList } from '@/api/user';
 import { storage } from '@/utils/Storage';
 
 export interface IUserState {
@@ -73,7 +73,7 @@ export const useUserStore = defineStore({
     // 获取用户信息
     GetInfo() {
       return new Promise((resolve, reject) => {
-        getUserRequest(this.info.userId)
+        getUserDetail(this.info.userId)
           .then((res) => {
             const result = res;
             if (result.role) {

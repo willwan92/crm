@@ -15,8 +15,10 @@
         v-model:value="searchParams.status"
         label-field="label"
         value-field="value"
+        clearable
         :options="statusOptions"
         style="width: 120px"
+        placeholder="全部" 
       />
     </n-form-item>
     <n-space>
@@ -27,14 +29,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, defineEmits, defineExpose } from 'vue';
+import { unref, reactive, defineEmits, defineExpose } from 'vue';
 import { QueryUserReq } from '@/api/models/user';
 
 const statusOptions = [
-  {
-    value: '',
-    label: '全部',
-  },
   {
     value: 0,
     label: '启用',
@@ -45,18 +43,19 @@ const statusOptions = [
   },
 ];
 
-const searchParams = reactive<QueryUserReq>({
+const defaultParams = () => ({
   keyName: '',
-  status: '',
+  status: null,
 });
+
+let  searchParams = reactive<QueryUserReq>(defaultParams());
 
 defineExpose({
   searchParams,
 });
 
 function resetParams() {
-  searchParams.keyName = '';
-  searchParams.status = 0;
+  searchParams = Object.assign(unref(searchParams), defaultParams());
   emitReloadTable();
 }
 

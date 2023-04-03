@@ -2,22 +2,15 @@
   <n-card :bordered="false" class="proCard">
     <SearchForm ref="searchFormRef" @reload-table="reloadTable" />
 
-    <n-button type="info" ghost @click="showEditModal"
-      >添加
+    <n-button type="info" ghost @click="showEditModal()">添加
       <template #icon>
         <n-icon>
           <PlusOutlined />
         </n-icon>
       </template>
     </n-button>
-    <BasicTable
-      :toolbarShow="false"
-      :columns="columns"
-      :request="loadDataTable"
-      :row-key="(row) => row.ip"
-      ref="tableRef"
-      :actionColumn="actionColumn"
-    />
+    <BasicTable :toolbarShow="false" :columns="columns" :request="loadDataTable" :row-key="(row) => row.ip" ref="tableRef"
+      :actionColumn="actionColumn" />
 
     <EditModal ref="editModal" @ok="reloadTable" />
   </n-card>
@@ -26,7 +19,6 @@
 <script lang="ts" setup>
 import { reactive, ref, h } from 'vue';
 import { BasicTable } from '@/components/Table';
-import { NTag } from 'naive-ui';
 import { getUserList, deleteUser, updateUserStatus } from '@/api/user';
 import EditModal from './components/EditModal.vue';
 import SearchForm from './components/SearchForm.vue';
@@ -50,11 +42,11 @@ const columns = [
     key: 'userName',
   },
   {
-    title: '状态',
+    title: '状态(启用/禁用)',
     key: 'status',
     render(row) {
       return h(NSwitch, {
-        defaultValue: row.status === 'enable',
+        value: !row.status,
         onUpdateValue: (value) => {
           setUserStatus(row.id, value);
         },
@@ -73,10 +65,20 @@ const actionColumn = reactive({
       h(
         NButton,
         {
-          type: 'error',
+          type: 'info',
           size: 'small',
           ghost: true,
           style: 'margin-right:5px',
+          onClick: () => showEditModal(row.id),
+        },
+        { default: () => '修改' }
+      ),
+      h(
+        NButton,
+        {
+          type: 'error',
+          size: 'small',
+          ghost: true,
           onClick: () => handleDelClick(row),
         },
         { default: () => '删除' }
@@ -88,7 +90,7 @@ const actionColumn = reactive({
 const setUserStatus = async (userId, status) => {
   let res = await updateUserStatus({
     userId,
-    status: status ? 0 : 1,
+    currentStatus: Number(status),
   });
   reloadTable();
 };
@@ -96,11 +98,11 @@ const setUserStatus = async (userId, status) => {
 function handleDelClick(row) {
   dialog.warning({
     title: '提示',
-    content: `确定要用户 ${row.accountName} 吗？`,
+    content: `确定要删除用户 ${row.accountName} 吗？`,
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: async () => {
-      await deleteUser(row.userId);
+      await deleteUser(row.id);
       message.success(`用户 ${row.accountName} 已删除`);
       reloadTable();
     },
@@ -108,14 +110,13 @@ function handleDelClick(row) {
 }
 
 const editModal = ref();
-const showEditModal = () => {
-  editModal.value.show();
+const showEditModal = (id) => {
+  editModal.value.show(id);
 };
 
 const searchFormRef = ref();
 const loadDataTable = async (params) => {
   const res = await getUserList({ ...searchFormRef.value.searchParams, ...params });
-  console.log(res);
   return res;
 };
 
