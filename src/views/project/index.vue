@@ -89,8 +89,8 @@ const getCityList = (areaIndex) => {
   getResourceList({
     resourceType: 'CITY',
     areaId: areas.value[areaIndex].id,
-    pageSize: 9999,
-    pageNum: 1,
+    size: 9999,
+    current: 1,
   }).then(res => {
     areas.value[areaIndex].cities = res.records.map(city => ({
       value: city.resourceId,
@@ -104,8 +104,8 @@ const getAreaList = () => {
   areaLoading.value = true;
   getResourceList({
     resourceType: 'AREA',
-    pageSize: 9999,
-    pageNum: 1,
+    size: 9999,
+    current: 1,
   }).then(res => {
     areas.value = res.records.map(item => ({
       id: item.resourceId,

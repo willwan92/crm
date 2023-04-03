@@ -1,6 +1,6 @@
 export interface PageReq {
-  pageNum: number;
-  pageSize: number;
+  current: number;
+  size: number;
 }
 
 export interface PageRes<T = any> {

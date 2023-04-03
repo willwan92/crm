@@ -41,8 +41,8 @@ let searchParams = reactive(defaultParams());
 
 getResourceList({
   resourceType: 'AREA',
-  pageSize: 9999,
-  pageNum: 1,
+  size: 9999,
+  current: 1,
 }).then(res => {
   areaOptions.value = res.records.map(item => ({
     value: item.resourceId,
@@ -55,8 +55,8 @@ const handleAreaUpdate = (value: string) => {
   getResourceList({
     areaId: value,
     resourceType: 'CITY',
-    pageSize: 9999,
-    pageNum: 1,
+    size: 9999,
+    current: 1,
   }).then(res => {
     cityOptions.value = res.records.map(item => ({
       value: item.resourceId,
