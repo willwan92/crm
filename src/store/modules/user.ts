@@ -58,13 +58,12 @@ export const useUserStore = defineStore({
     async login(userInfo) {
       try {
         const result = await login(userInfo);
-        console.log(result);
         storage.removeCookie('token');
         storage.set(ACCESS_TOKEN, result.token);
-        storage.set(CURRENT_USER, result.accuntVO);
+        storage.set(CURRENT_USER, result.accountInfo);
         storage.set(IS_LOCKSCREEN, false);
         this.setToken(result.token);
-        this.setUserInfo(result.accuntVO);
+        this.setUserInfo(result.accountInfo);
       } catch (e) {
         return Promise.reject(e);
       }
@@ -94,7 +93,6 @@ export const useUserStore = defineStore({
 
     // 登出
     async logout() {
-      await logoutReq({ username: this.info.username });
       this.setPermissions([]);
       this.setUserInfo('');
       storage.removeCookie('token');

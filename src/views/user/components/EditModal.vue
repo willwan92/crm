@@ -236,7 +236,7 @@ const handleConfirmClick = () => {
     if (formParams.id) {
       params.accountInfo.id = formParams.id
     } else {
-      params.accountInfo.secret = md5(formParams.userName, + md5(formParams.secret)) as string
+      params.accountInfo.secret = md5(formParams.userName + md5(formParams.secret)) as string
     }
     saveUser(params)
       .then(() => {
