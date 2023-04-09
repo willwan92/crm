@@ -16,8 +16,8 @@ import { renderIcon } from '@/utils/index';
  * */
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/consumer',
-    name: 'consumer',
+    path: '/customer',
+    name: 'customer',
     component: Layout,
     meta: {
       sort: 3,
@@ -28,12 +28,12 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: 'index',
-        name: `consumer_index`,
+        name: 'customer_index',
         meta: {
           title: '我的客户',
-          activeMenu: 'consumer_index',
+          activeMenu: 'customer_index',
         },
-        component: () => import('@/views/consumer/index.vue'),
+        component: () => import('@/views/customer/index.vue'),
       },
     ],
   },

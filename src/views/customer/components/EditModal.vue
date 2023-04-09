@@ -4,7 +4,7 @@
     preset="dialog"
     title="添加客户"
     :mask-closable="false"
-    style="width: 800px"
+    style="width: 960px"
   >
     <n-form
       ref="formRef"
@@ -50,8 +50,8 @@
           </n-form-item>
         </n-gi>
         <n-gi>
-          <n-form-item label="省市区" path="">
-            <n-input />
+          <n-form-item label="客户所在地" path="customerAddr">
+            <n-input v-model:value="formParams.customerAddr" />
           </n-form-item>
         </n-gi>
         <n-gi>
@@ -65,8 +65,8 @@
           </n-form-item>
         </n-gi>
         <n-gi>
-          <n-form-item label="注册时间" path="">
-            <n-date-picker type="datetime" clearable />
+          <n-form-item label="注册时间" path="registerDate">
+            <n-date-picker v-model:value="formParams.registerDate" type="date" clearable />
           </n-form-item>
         </n-gi>
         <n-gi>
@@ -125,14 +125,14 @@
           </n-form-item>
         </n-gi>
         <n-gi>
-          <n-form-item label="现有场地情况" path="spaceCondition">
+          <n-form-item label="现有场地" path="spaceCondition">
             <n-input-group>
               <n-select
                 v-model:value="spaceConditionType"
-                style="width: 150px"
+                style="width: 140px"
                 :options="spaceConditionOptions"
               />
-              <n-input v-model="formParams.spaceCondition" placeholder="保留两位小数"
+              <n-input v-model:value="formParams.spaceCondition" placeholder=""
                 ><template #suffix> 平米 </template></n-input
               >
             </n-input-group>
@@ -168,12 +168,13 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref, unref, defineExpose, defineEmits, handleError } from 'vue';
+  import { reactive, ref, unref, defineExpose, defineEmits } from 'vue';
   import { FormRules } from 'naive-ui';
   //   import { PWD_REGEXP } from '@/enums/validatorEnum';
   //   import { getRoleList } from '@/api/role';
-  import { AddConsumerReq } from '@/api/model/consumer';
-  import { add } from '@/api/consumer';
+  import { useUserStore } from '@/store/modules/user';
+  import { AddConsumerReq } from '@/api/model/customer';
+  import { add } from '@/api/customer';
 
   const spaceConditionOptions = [
     {
@@ -282,12 +283,14 @@
     contactPhone: '',
     contactPosition: '',
     customerName: '',
-    customerSource: '',
+    customerAddr: '',
+    customerSource: undefined,
     industry: '',
     mainProduct: '',
     organizationCode: '',
     registerAddress: '',
     registerCapital: '',
+    registerDate: undefined,
     relaEnterprises: '',
     rentType: '',
     requireArea: '',
@@ -302,9 +305,11 @@
     rentType: { required: true, trigger: ['blur', 'input'], message: '请选择租售类型' },
     customerSource: { required: true, trigger: ['blur', 'input'], message: '请选择客户来源' },
     customerName: { required: true, trigger: ['blur', 'input'], message: '请输入客户名称' },
+    customerAddr: { required: true, trigger: ['blur', 'input'], message: '请输入客户所在省市区' },
     organizationCode: { required: true, trigger: ['blur', 'input'], message: '请输入组织机构代码' },
     registerAddress: { required: true, trigger: ['blur', 'input'], message: '请输入注册地址' },
     registerCapital: { required: true, trigger: ['blur', 'input'], message: '请输入注册资本' },
+    registerDate: { required: true, type: 'integer', trigger: 'change', message: '请输入注册时间' },
     contactName: { required: true, trigger: ['blur', 'input'], message: '请输入联系人' },
     contactPhone: { required: true, trigger: ['blur', 'input'], message: '请输入联系人电话' },
     mainProduct: { required: true, trigger: ['blur', 'input'], message: '请输入主营产品' },
@@ -341,6 +346,12 @@
     formRef.value?.restoreValidation();
     modalVisible.value = true;
     formParams = Object.assign(unref(formParams), defaultParams());
+
+    const userStore = useUserStore();
+    const { resourceId, resourceName } = userStore?.info || {};
+    formParams.accountResourceId = resourceId;
+    formParams.accountResourceName = resourceName;
+    console.log(formParams);
   };
 
   defineExpose({

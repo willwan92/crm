@@ -1,14 +1,14 @@
 import { StatusEnum } from '@/enums/statusEnum';
 import { PageReq } from '@/models/basic';
 
-export interface QueryConsumerReq extends PageReq {
+export interface QueryCustomerReq extends PageReq {
   customerName: string;
   customerLevel: string;
   shareStatus: StatusEnum | null;
   status: StatusEnum | null;
 }
 
-export interface QueryConsumerRes {
+export interface QueryCustomerRes {
   accountResourceName: string;
   areaName: string;
   cityName: string;
@@ -23,7 +23,7 @@ export interface QueryConsumerRes {
   sourceAccountName: string;
 }
 
-export interface AddConsumerReq {
+export interface AddCustomerReq {
   accountResourceId: string;
   accountResourceName: string;
   areaId: string;
@@ -35,11 +35,13 @@ export interface AddConsumerReq {
   contactPosition: string;
   customerName: string;
   customerSource: string;
+  customerAddr: string;
   industry: string;
   mainProduct: string;
   organizationCode: string;
   registerAddress: string;
   registerCapital: string;
+  registerDate: string;
   relaEnterprises: string;
   rentType: string;
   requireArea: string;

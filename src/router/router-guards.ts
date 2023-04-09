@@ -12,7 +12,7 @@ const LOGIN_PATH = PageEnum.BASE_LOGIN;
 const whitePathList = [LOGIN_PATH]; // no redirect whitelist
 
 export function createRouterGuards(router: Router) {
-  //   const userStore = useUserStoreWidthOut();
+    const userStore = useUserStoreWidthOut();
   const asyncRouteStore = useAsyncRouteStoreWidthOut();
   router.beforeEach(async (to, from, next) => {
     const Loading = window['$loading'] || null;
@@ -52,9 +52,8 @@ export function createRouterGuards(router: Router) {
       return;
     }
 
-    // const userInfo = await userStore.GetInfo();
-    // 暂时没有获取用户信息接口
-    const userInfo = {};
+    // 获取用户详情信息
+    const userInfo = await userStore.GetInfo();
 
     const routes = await asyncRouteStore.generateRoutes(userInfo);
 
