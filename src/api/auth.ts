@@ -15,15 +15,9 @@ export function login(data) {
 /**
  * @description: 退出登录
  */
-export function logoutReq(params) {
-  return http.request(
-    {
-      url: '/sys/logout',
-      method: RequestEnum.POST,
-      params,
-    },
-    {
-      isTransformResponse: false,
-    }
-  );
+export function logout() {
+  return http.request({
+    url: '/sys/logout',
+    method: RequestEnum.POST,
+  });
 }
