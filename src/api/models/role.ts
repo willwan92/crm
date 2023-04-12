@@ -1,6 +1,5 @@
-
 export interface QueryRoleRes {
-    roleId: string;
-    roleCode: string;
-    roleName: string;
+  roleId: string;
+  roleCode: string;
+  roleName: string;
 }
