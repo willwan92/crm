@@ -44,6 +44,7 @@ export const useUserStore = defineStore({
     },
     setUserInfo(info) {
       this.info = info;
+      storage.set(CURRENT_USER, info);
     },
     //获取用户列表
     async getUserList() {
@@ -60,30 +61,21 @@ export const useUserStore = defineStore({
         const result = await login(userInfo);
         storage.removeCookie('token');
         storage.set(ACCESS_TOKEN, result.token);
-        storage.set(CURRENT_USER, result.accountInfo);
         storage.set(IS_LOCKSCREEN, false);
         this.setToken(result.token);
         this.setUserInfo(result.accountInfo);
-        this.GetInfo();
+        this.GetInfo(result.accountInfo.id);
       } catch (e) {
         return Promise.reject(e);
       }
     },
 
     // 获取用户信息
-    GetInfo() {
+    GetInfo(id) {
       return new Promise((resolve, reject) => {
-        getUserDetail(this.info.id)
+        getUserDetail(id)
           .then((res) => {
             this.setUserInfo(res);
-            // const result = res;
-            // if (result.role) {
-            //   const permissionsList = [result.role];
-            //   this.setPermissions(permissionsList);
-            //   this.setUserInfo(result);
-            // } else {
-            //   reject(new Error('getInfo: role must be a non-null!'));
-            // }
             resolve(res);
           })
           .catch((error) => {
