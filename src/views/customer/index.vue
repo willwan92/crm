@@ -2,7 +2,7 @@
   <n-card :bordered="false" class="proCard">
     <SearchForm ref="searchFormRef" @reload-table="reloadTable" />
 
-    <n-button type="info" ghost @click="showEditModal()"
+    <n-button type="info" ghost @click="showEditModal('')"
       >添加
       <template #icon>
         <n-icon>
@@ -15,20 +15,24 @@
       :columns="columns"
       :request="loadDataTable"
       :row-key="(row) => row.ip"
-      :scroll-x="1800"
       ref="tableRef"
       :actionColumn="actionColumn"
     />
 
     <EditModal ref="editModal" @ok="reloadTable" />
+    <FollowUpModal ref="followUpModal" @ok="reloadTable" />
+    <CooperateModal ref="cooperateModal" @ok="reloadTable" />
+    <!-- <DowngradeModal ref="downgradeModal" @ok="reloadTable" /> -->
   </n-card>
 </template>
 
 <script lang="ts" setup>
   import { reactive, ref, h } from 'vue';
   import { BasicTable } from '@/components/Table';
-  import { getList } from '@/api/customer';
+  import { getList, del } from '@/api/customer';
   import EditModal from './components/EditModal.vue';
+  import FollowUpModal from './components/FollowUpModal.vue';
+  import CooperateModal from './components/CooperateModal.vue';
   import SearchForm from './components/SearchForm.vue';
   import { PlusOutlined } from '@vicons/antd';
   import { formatToDate } from '@/utils/dateUtil';
@@ -42,17 +46,16 @@
       title: '序号',
       key: 'index',
       width: '60',
-      fixed: 'left',
     },
     {
       title: '客户编号',
       key: 'customerCode',
-      fixed: 'left',
+      width: '150',
     },
     {
       title: '客户名称',
       key: 'customerName',
-      fixed: 'left',
+      width: '200',
     },
     {
       title: '客户等级',
@@ -67,10 +70,6 @@
       key: 'accountResourceName',
     },
     {
-      title: '项目所在城市',
-      key: 'cityName',
-    },
-    {
       title: '来源渠道',
       key: 'customerSource',
     },
@@ -82,10 +81,6 @@
       title: '最新跟进日期',
       key: 'followUpTime',
     },
-    {
-      title: '未跟进天数',
-      key: 'notFollowUpDays',
-    },
   ];
 
   const actionColumn = reactive({
@@ -93,107 +88,140 @@
     title: '操作',
     key: 'action',
     align: 'center',
-    fixed: 'right',
     render(row) {
       return [
-        // h(
-        //   NButton,
-        //   {
-        //     size: 'small',
-        //     type: 'info',
-        //     tertiary: true,
-        //     style: 'margin-right:5px',
-        //     onClick: () => showEditModal(row.id),
-        //   },
-        //   { default: () => '跟进' }
-        // ),
-        // h(
-        //   NButton,
-        //   {
-        //     size: 'small',
-        //     type: 'info',
-        //     tertiary: true,
-        //     style: 'margin-right:5px',
-        //     onClick: () => showEditModal(row.id),
-        //   },
-        //   { default: () => '升级' }
-        // ),
-        // h(
-        //   NButton,
-        //   {
-        //     size: 'small',
-        //     type: 'info',
-        //     tertiary: true,
-        //     style: 'margin-right:5px',
-        //     onClick: () => showEditModal(row.id),
-        //   },
-        //   { default: () => '降级' }
-        // ),
-        // h(
-        //   NButton,
-        //   {
-        //     size: 'small',
-        //     type: 'info',
-        //     tertiary: true,
-        //     style: 'margin-right:5px',
-        //     onClick: () => showEditModal(row.id),
-        //   },
-        //   { default: () => '共享' }
-        // ),
-        // h(
-        //   NButton,
-        //   {
-        //     size: 'small',
-        //     type: 'info',
-        //     tertiary: true,
-        //     style: 'margin-right:5px',
-        //     onClick: () => showEditModal(row.id),
-        //   },
-        //   { default: () => '合作' }
-        // ),
-        // h(
-        //   NButton,
-        //   {
-        //     size: 'small',
-        //     type: 'info',
-        //     tertiary: true,
-        //     style: 'margin-right:5px',
-        //     onClick: () => showEditModal(row.id),
-        //   },
-        //   { default: () => '抛入公海' }
-        // ),
-        // h(
-        //   NButton,
-        //   {
-        //     size: 'small',
-        //     type: 'error',
-        //     tertiary: true,
-        //     onClick: () => handleDelClick(row),
-        //   },
-        //   { default: () => '删除' }
-        // ),
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'info',
+            tertiary: true,
+            style: 'margin-right:5px',
+            onClick: () => showEditModal(row.id),
+          },
+          { default: () => '编辑' }
+        ),
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'info',
+            tertiary: true,
+            style: 'margin-right:5px',
+            onClick: () => showFollowUpModal(row.id, row.customerName),
+          },
+          { default: () => '跟进' }
+        ),
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'info',
+            tertiary: true,
+            style: 'margin-right:5px',
+            onClick: () => showEditModal(row.id),
+          },
+          { default: () => '升级' }
+        ),
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'info',
+            tertiary: true,
+            style: 'margin-right:5px',
+            onClick: () => showDownModal(row.id, row.customerName),
+          },
+          { default: () => '降级' }
+        ),
+        row.customerLevel >= 'C' &&
+          h(
+            NButton,
+            {
+              size: 'small',
+              type: 'info',
+              tertiary: true,
+              style: 'margin-right:5px',
+              onClick: () => showCooperateModal(row),
+            },
+            { default: () => '合作' }
+          ),
+        row.customerLevel === 'E' &&
+          h(
+            NButton,
+            {
+              size: 'small',
+              type: 'info',
+              tertiary: true,
+              style: 'margin-right:5px',
+              onClick: () => handleDiscardClick(row),
+            },
+            { default: () => '抛入公海' }
+          ),
+        row.customerLevel === 'E' &&
+          h(
+            NButton,
+            {
+              size: 'small',
+              type: 'error',
+              tertiary: true,
+              onClick: () => handleDelClick(row),
+            },
+            { default: () => '删除' }
+          ),
       ];
     },
   });
 
-  // function handleDelClick(row) {
-  //   dialog.warning({
-  //     title: '提示',
-  //     content: `确定要删除客户 ${row.accountName} 吗？`,
-  //     positiveText: '确定',
-  //     negativeText: '取消',
-  //     onPositiveClick: async () => {
-  //       // await deleteUser(row.id);
-  //       message.success(`用户 ${row.accountName} 已删除`);
-  //       reloadTable();
-  //     },
-  //   });
-  // }
+  function handleDelClick(row) {
+    dialog.warning({
+      title: '提示',
+      content: `确定要删除客户 ${row.customerName} 吗？`,
+      positiveText: '确定',
+      negativeText: '取消',
+      onPositiveClick: async () => {
+        await del(row.id);
+        message.success(`客户 ${row.customerName} 已删除`);
+        reloadTable();
+      },
+    });
+  }
+
+  function handleDiscardClick(row) {
+    dialog.warning({
+      title: '提示',
+      content: `确定要把客户 ${row.customerName} 抛入公海吗？`,
+      positiveText: '确定',
+      negativeText: '取消',
+      onPositiveClick: async () => {
+        // await deleteUser(row.id);
+        message.success(`客户 ${row.customerName} 已抛入公海`);
+        reloadTable();
+      },
+    });
+  }
 
   const editModal = ref();
   const showEditModal = (id) => {
     editModal.value.show(id);
   };
+
+  const followUpModal = ref();
+  const showFollowUpModal = (id, name) => {
+    followUpModal.value.show(id, name);
+  };
+
+  const cooperateModal = ref();
+  const showCooperateModal = (row) => {
+    cooperateModal.value.show(row);
+  };
+
+  showCooperateModal;
+
+  //   const downgradeModal = ref();
+  //   const showDownModal = (id, name) => {
+  //     downgradeModal.value.show(id, name);
+  //   };
 
   const searchFormRef = ref();
   const loadDataTable = async (params) => {

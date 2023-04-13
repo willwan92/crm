@@ -20,7 +20,7 @@
         placeholder="全部"
       />
     </n-form-item>
-    <n-form-item label="是否共享客户" path="shareStatus">
+    <!-- <n-form-item label="是否共享客户" path="shareStatus">
       <n-select
         v-model:value="searchParams.shareStatus"
         label-field="label"
@@ -41,7 +41,7 @@
         style="width: 120px"
         placeholder="全部"
       />
-    </n-form-item>
+    </n-form-item> -->
     <n-space>
       <n-button type="info" @click="emitReloadTable"> 查询 </n-button>
       <n-button @click="resetParams">重置 </n-button>
@@ -54,6 +54,10 @@
   import { QueryUserReq } from '@/api/models/user';
 
   const levelOptions = [
+    {
+      value: -1,
+      label: 'E',
+    },
     {
       value: 0,
       label: 'D',
@@ -76,22 +80,20 @@
     },
   ];
 
-  const conditionOptions = [
-    {
-      value: 1,
-      label: '是',
-    },
-    {
-      value: 0,
-      label: '否',
-    },
-  ];
+  //   const conditionOptions = [
+  //     {
+  //       value: 1,
+  //       label: '是',
+  //     },
+  //     {
+  //       value: 0,
+  //       label: '否',
+  //     },
+  //   ];
 
   const defaultParams = () => ({
     customerName: '',
     customerLevel: null,
-    shareStatus: null,
-    status: null,
   });
 
   let searchParams = reactive<QueryUserReq>(defaultParams());
