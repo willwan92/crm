@@ -5,13 +5,19 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue';
   import { BasicTable } from '@/components/Table';
   import { getList } from '@/api/cooperate';
+  import { formatToDateTime } from '@/utils/dateUtil';
 
   const columns = [
     {
+      title: '序号',
+      key: 'index',
+      width: '100',
+    },
+    {
       title: '客户名称',
+      width: '160',
       key: 'customerName',
     },
     {
@@ -32,9 +38,13 @@
     },
   ];
 
-  const searchFormRef = ref();
   const loadDataTable = async (params) => {
-    const res = await getList({ ...searchFormRef.value.searchParams, ...params });
+    const res = await getList(params);
+    res.records = res.records.map((item, index) => {
+      item.index = (res.current - 1) * res.size + index + 1;
+      item.createTime = formatToDateTime(item.createTime);
+      return item;
+    });
     return res;
   };
 </script>

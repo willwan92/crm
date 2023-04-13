@@ -112,28 +112,28 @@
           },
           { default: () => '跟进' }
         ),
-        h(
-          NButton,
-          {
-            size: 'small',
-            type: 'info',
-            tertiary: true,
-            style: 'margin-right:5px',
-            onClick: () => showEditModal(row.id),
-          },
-          { default: () => '升级' }
-        ),
-        h(
-          NButton,
-          {
-            size: 'small',
-            type: 'info',
-            tertiary: true,
-            style: 'margin-right:5px',
-            onClick: () => showDownModal(row.id, row.customerName),
-          },
-          { default: () => '降级' }
-        ),
+        // h(
+        //   NButton,
+        //   {
+        //     size: 'small',
+        //     type: 'info',
+        //     tertiary: true,
+        //     style: 'margin-right:5px',
+        //     onClick: () => showEditModal(row.id),
+        //   },
+        //   { default: () => '升级' }
+        // ),
+        // h(
+        //   NButton,
+        //   {
+        //     size: 'small',
+        //     type: 'info',
+        //     tertiary: true,
+        //     style: 'margin-right:5px',
+        //     onClick: () => showDownModal(row.id, row.customerName),
+        //   },
+        //   { default: () => '降级' }
+        // ),
         row.customerLevel >= 'C' &&
           h(
             NButton,
@@ -146,18 +146,18 @@
             },
             { default: () => '合作' }
           ),
-        row.customerLevel === 'E' &&
-          h(
-            NButton,
-            {
-              size: 'small',
-              type: 'info',
-              tertiary: true,
-              style: 'margin-right:5px',
-              onClick: () => handleDiscardClick(row),
-            },
-            { default: () => '抛入公海' }
-          ),
+        // row.customerLevel === 'E' &&
+        //   h(
+        //     NButton,
+        //     {
+        //       size: 'small',
+        //       type: 'info',
+        //       tertiary: true,
+        //       style: 'margin-right:5px',
+        //       onClick: () => handleDiscardClick(row),
+        //     },
+        //     { default: () => '抛入公海' }
+        //   ),
         row.customerLevel === 'E' &&
           h(
             NButton,

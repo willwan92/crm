@@ -31,11 +31,11 @@
           :on-update:value="handleProjectChange"
         />
       </n-form-item>
-      <n-form-item label="合作人员" path="">
+      <n-form-item label="合作人员" path="cooperateAccountId">
         <n-select
           v-model:value="formParams.cooperateAccountId"
           label-field="label"
-          value-field="label"
+          value-field="value"
           :options="cooperateAccountOptions"
           :on-update:value="handleCooperateAccountChange"
           placeholder="请选择"
@@ -45,7 +45,7 @@
         <n-select
           v-model:value="formParams.currentAccountProjectDivision"
           label-field="label"
-          value-field="value"
+          value-field="label"
           :options="projectDivisionOptions"
           placeholder="请选择"
         />
@@ -73,39 +73,30 @@
 
   const projectDivisionOptions = [
     {
-      value: '10',
       label: '10%',
     },
     {
-      value: '20',
       label: '20%',
     },
     {
-      value: '30',
       label: '30%',
     },
     {
-      value: '40',
       label: '40%',
     },
     {
-      value: '50',
       label: '50%',
     },
     {
-      value: '60',
       label: '60%',
     },
     {
-      value: '70',
       label: '70%',
     },
     {
-      value: '80',
       label: '80%',
     },
     {
-      value: '90',
       label: '90%',
     },
   ];
@@ -181,57 +172,42 @@
   };
   getAreaList();
 
-  const cooperateAccountOptions = ref([]);
+  const cooperateAccountOptions = ref();
 
   const customerName = ref('');
   const defaultParams = () => ({
     accountResourceId: '',
     accountResourceName: '',
-    areaId: 0,
-    areaName: '',
     cooperateAccountId: '',
     cooperateAccountName: '',
-    currentAccountProjectDivision: '',
+    currentAccountProjectDivision: '50%',
     customerId: '',
-    mergerName: '',
   });
   let formParams = reactive(defaultParams());
 
-  const handleProjectChange = (value, option, pathValues) => {
+  const handleProjectChange = (value, option) => {
     formParams.accountResourceId = value;
     formParams.accountResourceName = option.label;
-    let mergerName = '';
-    pathValues.forEach((element, index) => {
-      mergerName += element.label;
-      if (index !== pathValues.length - 1) {
-        mergerName += ' / ';
-      }
-    });
-    formParams.mergerName = mergerName;
 
-    console.log(value, formParams);
-    getProjectAccountList(value).then((res) => {
-      debugger;
-      cooperateAccountOptions.value = res.map((item) => ({
-        label: item.accountName,
-        value: item.accountId,
-      }));
+    getProjectAccountList(value).then((data) => {
+      cooperateAccountOptions.value = Array.isArray(data)
+        ? data.map((item) => ({
+            label: item.accountName,
+            value: item.accountId,
+          }))
+        : [];
     });
   };
 
   const handleCooperateAccountChange = (value, option) => {
+    console.log(value, option);
+
+    formParams.cooperateAccountId = value;
     formParams.cooperateAccountName = option.label;
   };
 
   const isConfirming = ref(false);
   const rules = reactive<FormRules>({
-    followUpDesc: [
-      {
-        required: true,
-        trigger: ['blur', 'input'],
-        message: '请输入降级原因',
-      },
-    ],
     accountResourceId: [
       {
         required: true,
@@ -244,6 +220,13 @@
         required: true,
         trigger: ['change'],
         message: '请选择合作人员',
+      },
+    ],
+    currentAccountProjectDivision: [
+      {
+        required: true,
+        trigger: ['change'],
+        message: '请选择业绩分成',
       },
     ],
   });
@@ -271,10 +254,9 @@
   const modalVisible = ref(false);
   const show = async (row) => {
     customerName.value = row.customerName;
-    formParams.areaId = row.areaId;
-    formParams.areaName = row.areaName;
-    formParams.mergerName = row.mergerName;
     formParams.customerId = row.id;
+    console.log(row);
+
     formRef.value?.restoreValidation();
     modalVisible.value = true;
   };

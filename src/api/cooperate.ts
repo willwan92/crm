@@ -7,13 +7,13 @@ import { PageRes } from '@/api/models/basic';
 export function getList(params) {
   return http.request<Result<PageRes>>({
     url: '/cooperate/cooperate/list',
-    method: RequestEnum.GET,
+    method: RequestEnum.POST,
     params,
   });
 }
 
 export function getProjectAccountList(projectId: string) {
-  return http.request<Result<PageRes>>({
+  return http.request<Result>({
     url: '/cooperate/cooperate/account/list',
     method: RequestEnum.GET,
     params: {
