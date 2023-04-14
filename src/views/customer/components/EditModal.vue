@@ -15,7 +15,7 @@
       label-width="auto"
       size="medium"
       require-mark-placement="right-hanging"
-      style="margin: 30px 30px 0"
+      style="margin: 30px 0 0"
     >
       <n-grid x-gap="12" :cols="3">
         <n-gi>
@@ -27,18 +27,7 @@
               :options="projectList"
               :on-update:value="handleProjectChange"
               :disabled="Boolean(customerId)"
-              placeholder="请选择"
             />
-          </n-form-item>
-        </n-gi>
-        <n-gi>
-          <n-form-item label="租售类型" path="rentType">
-            <n-radio-group v-model:value="formParams.rentType">
-              <n-space>
-                <n-radio value="租赁">租赁</n-radio>
-                <n-radio value="销售">销售</n-radio>
-              </n-space>
-            </n-radio-group>
           </n-form-item>
         </n-gi>
         <n-gi>
@@ -49,7 +38,6 @@
               value-field="label"
               :disabled="Boolean(customerId)"
               :options="customerSourceOptions"
-              placeholder="请选择"
             />
           </n-form-item>
         </n-gi>
@@ -58,8 +46,13 @@
             <n-input v-model:value="formParams.customerName" :disabled="Boolean(customerId)" />
           </n-form-item>
         </n-gi>
+        <n-gi>
+          <n-form-item label="组织机构代码" path="organizationCode">
+            <n-input v-model:value="formParams.organizationCode" :disabled="Boolean(customerId)" />
+          </n-form-item>
+        </n-gi>
         <n-gi v-show="!customerId">
-          <n-form-item label="客户所在地" path="areaId">
+          <n-form-item label="客户地区" path="areaId">
             <n-cascader
               remote
               check-strategy="child"
@@ -71,18 +64,28 @@
           </n-form-item>
         </n-gi>
         <n-gi v-show="Boolean(customerId)">
-          <n-form-item label="客户所在地" path="mergerName">
+          <n-form-item label="客户地区" path="mergerName">
             <n-input v-model:value="formParams.mergerName" :disabled="Boolean(customerId)" />
-          </n-form-item>
-        </n-gi>
-        <n-gi>
-          <n-form-item label="组织机构代码" path="organizationCode">
-            <n-input v-model:value="formParams.organizationCode" :disabled="Boolean(customerId)" />
           </n-form-item>
         </n-gi>
         <n-gi>
           <n-form-item label="注册地址" path="registerAddress">
             <n-input v-model:value="formParams.registerAddress" :disabled="Boolean(customerId)" />
+          </n-form-item>
+        </n-gi>
+        <n-gi>
+          <n-form-item label="注册资本" path="registerCapital">
+            <n-input-group>
+              <n-input v-model:value="formParams.registerCapital" :disabled="Boolean(customerId)" />
+              <n-select
+                v-model:value="monetaryUnit"
+                label-field="label"
+                value-field="label"
+                :disabled="Boolean(customerId)"
+                :options="unitOptions"
+                :consistent-menu-width="false"
+              />
+            </n-input-group>
           </n-form-item>
         </n-gi>
         <n-gi>
@@ -96,10 +99,14 @@
           </n-form-item>
         </n-gi>
         <n-gi>
-          <n-form-item label="注册资本" path="registerCapital">
-            <n-input v-model:value="formParams.registerCapital" :disabled="Boolean(customerId)">
-              <template #suffix>万元</template>
-            </n-input>
+          <n-form-item label="关联企业" path="relaEnterprises">
+            <n-select
+              v-model:value="formParams.relaEnterprises"
+              label-field="label"
+              value-field="label"
+              :options="relaEnterprisesOptions"
+              :disabled="Boolean(customerId)"
+            />
           </n-form-item>
         </n-gi>
         <n-gi>
@@ -115,7 +122,6 @@
               value-field="label"
               :options="contactPositionOptions"
               :disabled="Boolean(customerId)"
-              placeholder="请选择"
             />
           </n-form-item>
         </n-gi>
@@ -131,25 +137,12 @@
               label-field="label"
               value-field="label"
               :options="industryOptions"
-              placeholder="请选择"
             />
           </n-form-item>
         </n-gi>
         <n-gi>
           <n-form-item label="主营产品" path="mainProduct">
             <n-input v-model:value="formParams.mainProduct" />
-          </n-form-item>
-        </n-gi>
-        <n-gi>
-          <n-form-item label="关联企业" path="relaEnterprises">
-            <n-select
-              v-model:value="formParams.relaEnterprises"
-              label-field="label"
-              value-field="label"
-              :options="relaEnterprisesOptions"
-              :disabled="Boolean(customerId)"
-              placeholder="请选择"
-            />
           </n-form-item>
         </n-gi>
         <n-gi>
@@ -160,10 +153,20 @@
                 style="width: 128px"
                 :options="spaceConditionOptions"
               />
-              <n-input v-model:value="formParams.spaceCondition" placeholder=""
+              <n-input v-model:value="formParams.spaceCondition"
                 ><template #suffix> 平米 </template></n-input
               >
             </n-input-group>
+          </n-form-item>
+        </n-gi>
+        <n-gi>
+          <n-form-item label="租售类型" path="rentType">
+            <n-radio-group v-model:value="formParams.rentType">
+              <n-space>
+                <n-radio value="租赁">租赁</n-radio>
+                <n-radio value="销售">销售</n-radio>
+              </n-space>
+            </n-radio-group>
           </n-form-item>
         </n-gi>
         <n-gi>
@@ -178,7 +181,7 @@
         </n-gi>
         <n-gi>
           <n-form-item label="需求面积" path="requireArea">
-            <n-input v-model:value="formParams.requireArea" placeholder="">
+            <n-input v-model:value="formParams.requireArea">
               <template #suffix> 平米 </template>
             </n-input>
           </n-form-item>
@@ -199,6 +202,7 @@
   import { reactive, ref, unref, defineExpose, defineEmits } from 'vue';
   import { FormRules, FormItemRule } from 'naive-ui';
   import {
+    unitOptions,
     spaceConditionOptions,
     contactPositionOptions,
     industryOptions,
@@ -215,7 +219,7 @@
   provinceApi.getProvinceList().then((res) => {
     addrOptions.value = res.map((item) => {
       return {
-        label: item.shortName,
+        label: item.name,
         value: item.id + '',
         areaCode: item.areaCode,
         depth: 1,
@@ -228,7 +232,7 @@
     return provinceApi.getAreaList(option.areaCode).then((res) => {
       option.children = res.map((item) => {
         return {
-          label: item.shortName,
+          label: item.name,
           value: item.id + '',
           areaCode: item.areaCode,
           depth: (option as { depth: number }).depth + 1,
@@ -350,6 +354,7 @@
   const modalVisible = ref(false);
   const projectList = ref([]);
   const customerId = ref('');
+  const monetaryUnit = ref('元');
   const show = async (id) => {
     modalVisible.value = true;
     formRef.value?.restoreValidation();
@@ -361,9 +366,13 @@
       getDetail(id).then((res) => {
         Object.assign(unref(formParams), res.baseInfoDTO);
         formParams.areaId = '1';
+        const registerCapital = formParams.registerCapital.split(' ');
+        formParams.registerCapital = registerCapital[0];
+        monetaryUnit.value = registerCapital[1];
       });
     } else {
       customerId.value = '';
+      monetaryUnit.value = '万（元）';
       formParams = Object.assign(unref(formParams), defaultParams());
     }
   };
@@ -376,6 +385,7 @@
       }
       isConfirming.value = true;
       if (!customerId.value) {
+        formParams.registerCapital += ` ${monetaryUnit.value}`;
         add(formParams)
           .then(() => {
             modalVisible.value = false;

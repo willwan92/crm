@@ -90,3 +90,21 @@ export const customerSourceOptions = [
     label: '渠道',
   },
 ];
+
+export const unitOptions = [
+  {
+    label: '万（元）',
+  },
+  {
+    label: '万（美元）',
+  },
+  {
+    label: '万（港元）',
+  },
+  {
+    label: '万（日元）',
+  },
+  {
+    label: '万（欧元）',
+  },
+];
