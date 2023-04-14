@@ -28,6 +28,7 @@
 
 <script lang="ts" setup>
   import { reactive, ref, h } from 'vue';
+  import { useRouter } from 'vue-router';
   import { BasicTable } from '@/components/Table';
   import { getList, del } from '@/api/customer';
   import EditModal from './components/EditModal.vue';
@@ -40,6 +41,7 @@
 
   const message = useMessage();
   const dialog = useDialog();
+  const router = useRouter();
 
   const columns = [
     {
@@ -56,6 +58,19 @@
       title: '客户名称',
       key: 'customerName',
       width: '200',
+      render(row) {
+        return h(
+          NButton,
+          {
+            type: 'info',
+            text: true,
+            onClick: () => {
+              router.push('/customer/customer_detail/' + row.id);
+            },
+          },
+          { default: () => row.customerName }
+        );
+      },
     },
     {
       title: '客户等级',

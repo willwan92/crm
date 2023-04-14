@@ -188,7 +188,7 @@
   const handleProjectChange = (value, option) => {
     formParams.accountResourceId = value;
     formParams.accountResourceName = option.label;
-
+    formParams.cooperateAccountId = '';
     getProjectAccountList(value).then((data) => {
       cooperateAccountOptions.value = Array.isArray(data)
         ? data.map((item) => ({
@@ -200,8 +200,6 @@
   };
 
   const handleCooperateAccountChange = (value, option) => {
-    console.log(value, option);
-
     formParams.cooperateAccountId = value;
     formParams.cooperateAccountName = option.label;
   };

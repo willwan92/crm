@@ -5,9 +5,14 @@
 </template>
 
 <script lang="ts" setup>
+  import { h } from 'vue';
+  import { useRouter } from 'vue-router';
   import { BasicTable } from '@/components/Table';
   import { getList } from '@/api/cooperate';
   import { formatToDateTime } from '@/utils/dateUtil';
+  import { NButton } from 'naive-ui';
+
+  const router = useRouter();
 
   const columns = [
     {
@@ -19,6 +24,19 @@
       title: '客户名称',
       width: '160',
       key: 'customerName',
+      render(row) {
+        return h(
+          NButton,
+          {
+            type: 'info',
+            text: true,
+            onClick: () => {
+              router.push('/customer/customer_detail/' + row.customerId);
+            },
+          },
+          { default: () => row.customerName }
+        );
+      },
     },
     {
       title: '客户编号',

@@ -17,23 +17,31 @@ import { renderIcon } from '@/utils/index';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/customer',
-    name: 'customer',
+    name: 'Customer',
+    redirect: '/customer/customer_index',
     component: Layout,
     meta: {
       sort: 3,
-      isRoot: true,
-      activeMenu: 'consumer_index',
+      title: '我的客户',
       icon: renderIcon(BusinessCenterOutlined),
     },
     children: [
       {
-        path: 'index',
+        path: 'customer_index',
         name: 'customer_index',
         meta: {
           title: '我的客户',
-          activeMenu: 'customer_index',
         },
         component: () => import('@/views/customer/index.vue'),
+      },
+      {
+        path: 'customer_detail/:id?',
+        name: 'customer_detail',
+        meta: {
+          title: '客户详情',
+          hidden: true,
+        },
+        component: () => import('@/views/customer/detail.vue'),
       },
     ],
   },

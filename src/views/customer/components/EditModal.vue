@@ -52,7 +52,7 @@
           </n-form-item>
         </n-gi>
         <n-gi v-show="!customerId">
-          <n-form-item label="客户地区" path="areaId">
+          <n-form-item label="客户所在地区" path="areaId">
             <n-cascader
               remote
               check-strategy="child"
@@ -64,7 +64,7 @@
           </n-form-item>
         </n-gi>
         <n-gi v-show="Boolean(customerId)">
-          <n-form-item label="客户地区" path="mergerName">
+          <n-form-item label="客户所在地区" path="mergerName">
             <n-input v-model:value="formParams.mergerName" :disabled="Boolean(customerId)" />
           </n-form-item>
         </n-gi>
@@ -150,6 +150,8 @@
             <n-input-group>
               <n-select
                 v-model:value="spaceConditionType"
+                label-field="label"
+                value-field="label"
                 style="width: 128px"
                 :options="spaceConditionOptions"
               />
@@ -241,8 +243,6 @@
       });
     });
   }
-
-  const spaceConditionType = ref('租赁');
 
   const defaultParams = () => ({
     accountResourceId: '',
@@ -354,6 +354,7 @@
   const modalVisible = ref(false);
   const projectList = ref([]);
   const customerId = ref('');
+  const spaceConditionType = ref('租赁');
   const monetaryUnit = ref('元');
   const show = async (id) => {
     modalVisible.value = true;
@@ -369,10 +370,15 @@
         const registerCapital = formParams.registerCapital.split(' ');
         formParams.registerCapital = registerCapital[0];
         monetaryUnit.value = registerCapital[1];
+
+        const spaceCondition = formParams.spaceCondition.split(' ');
+        formParams.spaceCondition = spaceCondition[1];
+        spaceConditionType.value = spaceCondition[0];
       });
     } else {
       customerId.value = '';
       monetaryUnit.value = '万（元）';
+      spaceConditionType.value = '租赁';
       formParams = Object.assign(unref(formParams), defaultParams());
     }
   };
@@ -384,8 +390,9 @@
         return;
       }
       isConfirming.value = true;
+      formParams.registerCapital += ` ${monetaryUnit.value}`;
+      formParams.spaceCondition = `${spaceConditionType.value} ${formParams.spaceCondition}`;
       if (!customerId.value) {
-        formParams.registerCapital += ` ${monetaryUnit.value}`;
         add(formParams)
           .then(() => {
             modalVisible.value = false;
