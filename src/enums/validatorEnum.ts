@@ -7,6 +7,10 @@ export const MOBILE_REGEXP = /^1[3-9]\d{9}$/;
 // 正整数表达式
 export const POSITIVE_INT_REGEXP = /^[1-9]\d*$/;
 
+// 整数或1-2位小数
+export const POSITIVE_FLOAT_REGEXP = /(^[0-9]+$)|(^[0-9]+[\.]{1}[0-9]{1,2}$)/;
+
+
 // 邮箱正则表达式
 // 邮箱规则：
 // 1. 邮箱域名部分规则，同域名规则；

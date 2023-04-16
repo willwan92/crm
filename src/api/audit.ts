@@ -4,27 +4,28 @@ import { RequestEnum } from '@/enums/httpEnum';
 import { PageRes } from '@/api/models/basic';
 // import { QueryConsumerReq, QueryConsumerRes } from '@/api/models/consumer';
 
-export function getList(params) {
+export function getApplyList(params) {
   return http.request<Result<PageRes>>({
-    url: '/cooperate/cooperate/list',
+    url: '/audit/apply/list',
     method: RequestEnum.GET,
-    params,
+    params: params,
   });
 }
 
-export function getProjectAccountList(projectId: string) {
+export function getAuditAccountList(customerId: string, projectId: string) {
   return http.request<Result>({
-    url: '/cooperate/cooperate/account/list',
+    url: '/audit/audit/account/list',
     method: RequestEnum.GET,
     params: {
+      customerId,
       projectId,
     },
   });
 }
 
-export function cooperate(data) {
+export function upgrade(data) {
   return http.request<Result>({
-    url: '/cooperate/cooperate',
+    url: '/audit/upgrade',
     method: RequestEnum.POST,
     data,
   });

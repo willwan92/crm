@@ -22,6 +22,7 @@
     <EditModal ref="editModal" @ok="reloadTable" />
     <FollowUpModal ref="followUpModal" @ok="reloadTable" />
     <CooperateModal ref="cooperateModal" @ok="reloadTable" />
+    <UpgradeModal ref="upgradeModal" @ok="reloadTable" />
     <!-- <DowngradeModal ref="downgradeModal" @ok="reloadTable" /> -->
   </n-card>
 </template>
@@ -34,6 +35,7 @@
   import EditModal from './components/EditModal.vue';
   import FollowUpModal from './components/FollowUpModal.vue';
   import CooperateModal from './components/CooperateModal.vue';
+  import UpgradeModal from './components/UpgradeModal.vue';
   import SearchForm from './components/SearchForm.vue';
   import { PlusOutlined } from '@vicons/antd';
   import { formatToDate } from '@/utils/dateUtil';
@@ -127,17 +129,17 @@
           },
           { default: () => '跟进' }
         ),
-        // h(
-        //   NButton,
-        //   {
-        //     size: 'small',
-        //     type: 'info',
-        //     tertiary: true,
-        //     style: 'margin-right:5px',
-        //     onClick: () => showEditModal(row.id),
-        //   },
-        //   { default: () => '升级' }
-        // ),
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'info',
+            tertiary: true,
+            style: 'margin-right:5px',
+            onClick: () => showUpgradeModal(row),
+          },
+          { default: () => '升级' }
+        ),
         // h(
         //   NButton,
         //   {
@@ -231,7 +233,10 @@
     cooperateModal.value.show(row);
   };
 
-  showCooperateModal;
+  const upgradeModal = ref();
+  const showUpgradeModal = (row) => {
+    upgradeModal.value.show(row);
+  };
 
   //   const downgradeModal = ref();
   //   const showDownModal = (id, name) => {

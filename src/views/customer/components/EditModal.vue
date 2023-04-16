@@ -390,7 +390,7 @@
         return;
       }
       isConfirming.value = true;
-      formParams.registerCapital += ` ${monetaryUnit.value}`;
+      formParams.registerCapital += `${monetaryUnit.value}`;
       formParams.spaceCondition = `${spaceConditionType.value} ${formParams.spaceCondition}`;
       if (!customerId.value) {
         add(formParams)
