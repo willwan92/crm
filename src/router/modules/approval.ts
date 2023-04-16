@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { FileTextOutlined } from '@vicons/antd';
+import { AuditOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
 
 /**
@@ -16,24 +16,24 @@ import { renderIcon } from '@/utils/index';
  * */
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/application',
-    name: 'application',
+    path: '/approval',
+    name: 'approval',
     component: Layout,
     meta: {
-      sort: 5,
+      sort: 6,
       isRoot: true,
-      activeMenu: 'application_index',
-      icon: renderIcon(FileTextOutlined),
+      activeMenu: 'approval_index',
+      icon: renderIcon(AuditOutlined),
     },
     children: [
       {
         path: 'index',
-        name: `application_index`,
+        name: `approval_index`,
         meta: {
-          title: '升降级申请',
-          activeMenu: 'application_index',
+          title: '待我审批',
+          activeMenu: 'approval_index',
         },
-        component: () => import('@/views/application/index.vue'),
+        component: () => import('@/views/approval/index.vue'),
       },
     ],
   },
