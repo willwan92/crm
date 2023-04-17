@@ -103,7 +103,7 @@
     formRef.value?.restoreValidation();
     modalVisible.value = true;
 
-    getAuditAccountList(row.id, row.accountResourceId).then((res) => {
+    getAuditAccountList(row.id, row.accountResourceId, 'DOWN').then((res) => {
       approveAccountOptions.value = res.map((item) => ({
         value: item.accountId,
         label: `${item.accountName}（${item.accountPositionName}）`,

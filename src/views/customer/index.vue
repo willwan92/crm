@@ -129,28 +129,30 @@
           },
           { default: () => '跟进' }
         ),
-        h(
-          NButton,
-          {
-            size: 'small',
-            type: 'info',
-            tertiary: true,
-            style: 'margin-right:5px',
-            onClick: () => showUpgradeModal(row),
-          },
-          { default: () => '升级' }
-        ),
-        h(
-          NButton,
-          {
-            size: 'small',
-            type: 'info',
-            tertiary: true,
-            style: 'margin-right:5px',
-            onClick: () => showDownModal(row),
-          },
-          { default: () => '降级' }
-        ),
+        row.customerLevel !== 'O' &&
+          h(
+            NButton,
+            {
+              size: 'small',
+              type: 'info',
+              tertiary: true,
+              style: 'margin-right:5px',
+              onClick: () => showUpgradeModal(row),
+            },
+            { default: () => '升级' }
+          ),
+        row.customerLevel !== 'E' &&
+          h(
+            NButton,
+            {
+              size: 'small',
+              type: 'info',
+              tertiary: true,
+              style: 'margin-right:5px',
+              onClick: () => showDownModal(row),
+            },
+            { default: () => '降级' }
+          ),
         row.customerLevel >= 'C' &&
           h(
             NButton,

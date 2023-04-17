@@ -292,7 +292,7 @@
     rules = Object.assign(rules, upgradeMap[currentLevel.value].rules);
     modalVisible.value = true;
 
-    getAuditAccountList(row.id, row.accountResourceId).then((res) => {
+    getAuditAccountList(row.id, row.accountResourceId, 'UP').then((res) => {
       approveAccountOptions.value = res.map((item) => ({
         value: item.accountId,
         label: `${item.accountName}（${item.accountPositionName}）`,

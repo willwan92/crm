@@ -4,48 +4,42 @@ import { RequestEnum } from '@/enums/httpEnum';
 import { PageRes } from '@/api/models/basic';
 
 /**
- * 升降级申请记录
- * @param params
- * @returns
+ * 升降级申请列表
  */
 export function getApplyList(params) {
   return http.request<Result<PageRes>>({
     url: '/audit/apply/list',
     method: RequestEnum.GET,
-    params: params,
+    params,
   });
 }
 
 /**
- * 待审批记录
- * @param customerId
- * @param projectId
- * @returns
+ * 升降级审批列表
  */
-export function getAuditList(customerId: string, projectId: string) {
+export function getAuditList(params) {
   return http.request<Result>({
     url: '/audit/audit/list',
     method: RequestEnum.GET,
-    params: {
-      customerId,
-      projectId,
-    },
+    params,
   });
 }
 
 /**
  * 审批人选项
- * @param customerId
- * @param projectId
- * @returns
  */
-export function getAuditAccountList(customerId: string, projectId: string) {
+export function getAuditAccountList(
+  customerId: string,
+  projectId: string,
+  upOrDowngrade: 'DOWN' | 'UP'
+) {
   return http.request<Result>({
     url: '/audit/audit/account/list',
     method: RequestEnum.GET,
     params: {
       customerId,
       projectId,
+      upOrDowngrade,
     },
   });
 }
