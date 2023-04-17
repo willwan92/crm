@@ -67,6 +67,72 @@
       </n-descriptions>
     </n-spin>
   </n-card>
+
+  <n-card title="客户升级信息" class="card">
+    <n-spin :show="loading">
+      <n-descriptions
+        v-if="baseInfo.customerLevel < 'D'"
+        label-placement="left"
+        bordered
+        :column="4"
+      >
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'D'" label="升级操作">
+          D升C
+        </n-descriptions-item>
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'D'" label="来访时间">
+          {{ baseInfo.visitTime && formatToDate(baseInfo.visitTime) }}
+        </n-descriptions-item>
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'D'" label="来访人员">
+          {{ baseInfo.visitName }}
+        </n-descriptions-item>
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'D'" label="来访人电话">
+          {{ baseInfo.visitPhone }}
+        </n-descriptions-item>
+
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'C'" label="升级操作">
+          C升B
+        </n-descriptions-item>
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'C'" label="锁定房源">
+          {{ baseInfo.lockHouseResource }}
+        </n-descriptions-item>
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'C'" label="房源面积">
+          {{ baseInfo.lockHouseArea }} 平米
+        </n-descriptions-item>
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'C'" label="意向金额">
+          {{ baseInfo.lockIntendedAmount }} 元
+        </n-descriptions-item>
+
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'B'" label="升级操作">
+          B升A
+        </n-descriptions-item>
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'B'" label="认购房源">
+          {{ baseInfo.offerHouseResource }}
+        </n-descriptions-item>
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'B'" label="认购面积">
+          {{ baseInfo.offerHouseArea }} 平米
+        </n-descriptions-item>
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'B'" label="定金金额">
+          {{ baseInfo.depositAmount }} 元
+        </n-descriptions-item>
+
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'A'" label="升级操作">
+          A升O
+        </n-descriptions-item>
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'A'" label="签约时间">
+          {{ baseInfo.signTime && formatToDate(baseInfo.signTime) }}
+        </n-descriptions-item>
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'A'" label="首付金额">
+          {{ baseInfo.downPaymentAmount }} 元
+        </n-descriptions-item>
+        <n-descriptions-item v-if="baseInfo.customerLevel < 'A'" label="首付期限">
+          {{ baseInfo.downPaymentTime && formatToDate(baseInfo.downPaymentTime) }}
+        </n-descriptions-item>
+      </n-descriptions>
+
+      <n-empty v-else description="无客户升级信息" />
+    </n-spin>
+  </n-card>
+
   <n-card title="客户跟进记录">
     <n-descriptions
       v-if="followUpRecords.length"
