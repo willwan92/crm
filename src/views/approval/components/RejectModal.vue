@@ -2,7 +2,7 @@
   <n-modal
     v-model:show="modalVisible"
     preset="dialog"
-    title="客户降级"
+    title="拒绝申请"
     :mask-closable="false"
     style="width: 600px"
   >
@@ -20,17 +20,8 @@
       <n-form-item label="客户名称" path="">
         <n-input v-model:value="customerName" readonly placeholder="" />
       </n-form-item>
-      <n-form-item label="降级原因" path="downgradeReason">
-        <n-input v-model:value="formParams.downgradeReason" type="textarea" placeholder="" />
-      </n-form-item>
-      <n-form-item label="审批人" path="approveAccountId">
-        <n-select
-          v-model:value="formParams.approveAccountId"
-          label-field="label"
-          value-field="value"
-          :options="approveAccountOptions"
-          placeholder="请选择"
-        />
+      <n-form-item label="拒绝原因" path="rejectReason">
+        <n-input v-model:value="formParams.rejectReason" type="textarea" placeholder="" />
       </n-form-item>
     </n-form>
     <template #action>
@@ -45,33 +36,23 @@
 <script lang="ts" setup>
   import { reactive, ref, defineExpose, defineEmits } from 'vue';
   import { FormRules } from 'naive-ui';
-  import { getAuditAccountList, downgrade } from '@/api/audit';
+  import { reject } from '@/api/audit';
 
   const formRef = ref();
 
-  const approveAccountOptions = ref();
-
   const defaultParams = () => ({
-    customerId: '',
-    downgradeReason: '',
-    approveAccountId: '',
+    auditRecordId: '',
+    rejectReason: '',
   });
   let formParams = reactive(defaultParams());
 
   const isConfirming = ref(false);
   const rules = reactive<FormRules>({
-    downgradeReason: [
+    rejectReason: [
       {
         required: true,
         trigger: ['blur', 'input'],
-        message: '请输入降级原因',
-      },
-    ],
-    approveAccountId: [
-      {
-        required: true,
-        trigger: ['blur'],
-        message: '请选择审批人',
+        message: '请输入拒绝原因',
       },
     ],
   });
@@ -84,7 +65,7 @@
       }
       isConfirming.value = true;
 
-      downgrade(formParams)
+      reject(formParams)
         .then(() => {
           emit('ok');
           modalVisible.value = false;
@@ -97,18 +78,11 @@
 
   const modalVisible = ref(false);
   const customerName = ref();
-  const show = async (row) => {
-    customerName.value = row.customerName;
-    formParams.customerId = row.id;
+  const show = async (id: string, name: string) => {
+    customerName.value = name;
+    formParams.auditRecordId = id;
     formRef.value?.restoreValidation();
     modalVisible.value = true;
-
-    getAuditAccountList(row.id, row.accountResourceId).then((res) => {
-      approveAccountOptions.value = res.map((item) => ({
-        value: item.accountId,
-        label: `${item.accountName}（${item.accountPositionName}）`,
-      }));
-    });
   };
 
   defineExpose({

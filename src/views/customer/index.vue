@@ -14,7 +14,6 @@
       :toolbarShow="false"
       :columns="columns"
       :request="loadDataTable"
-      :row-key="(row) => row.ip"
       ref="tableRef"
       :actionColumn="actionColumn"
     />
@@ -23,7 +22,7 @@
     <FollowUpModal ref="followUpModal" @ok="reloadTable" />
     <CooperateModal ref="cooperateModal" @ok="reloadTable" />
     <UpgradeModal ref="upgradeModal" @ok="reloadTable" />
-    <!-- <DowngradeModal ref="downgradeModal" @ok="reloadTable" /> -->
+    <DowngradeModal ref="downgradeModal" @ok="reloadTable" />
   </n-card>
 </template>
 
@@ -36,6 +35,7 @@
   import FollowUpModal from './components/FollowUpModal.vue';
   import CooperateModal from './components/CooperateModal.vue';
   import UpgradeModal from './components/UpgradeModal.vue';
+  import DowngradeModal from './components/DowngradeModal.vue';
   import SearchForm from './components/SearchForm.vue';
   import { PlusOutlined } from '@vicons/antd';
   import { formatToDate } from '@/utils/dateUtil';
@@ -59,7 +59,7 @@
     {
       title: '客户名称',
       key: 'customerName',
-      width: '200',
+      width: 200,
       render(row) {
         return h(
           NButton,
@@ -140,17 +140,17 @@
           },
           { default: () => '升级' }
         ),
-        // h(
-        //   NButton,
-        //   {
-        //     size: 'small',
-        //     type: 'info',
-        //     tertiary: true,
-        //     style: 'margin-right:5px',
-        //     onClick: () => showDownModal(row.id, row.customerName),
-        //   },
-        //   { default: () => '降级' }
-        // ),
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'info',
+            tertiary: true,
+            style: 'margin-right:5px',
+            onClick: () => showDownModal(row),
+          },
+          { default: () => '降级' }
+        ),
         row.customerLevel >= 'C' &&
           h(
             NButton,
@@ -204,19 +204,19 @@
     });
   }
 
-  function handleDiscardClick(row) {
-    dialog.warning({
-      title: '提示',
-      content: `确定要把客户 ${row.customerName} 抛入公海吗？`,
-      positiveText: '确定',
-      negativeText: '取消',
-      onPositiveClick: async () => {
-        // await deleteUser(row.id);
-        message.success(`客户 ${row.customerName} 已抛入公海`);
-        reloadTable();
-      },
-    });
-  }
+  //   function handleDiscardClick(row) {
+  //     dialog.warning({
+  //       title: '提示',
+  //       content: `确定要把客户 ${row.customerName} 抛入公海吗？`,
+  //       positiveText: '确定',
+  //       negativeText: '取消',
+  //       onPositiveClick: async () => {
+  //         // await deleteUser(row.id);
+  //         message.success(`客户 ${row.customerName} 已抛入公海`);
+  //         reloadTable();
+  //       },
+  //     });
+  //   }
 
   const editModal = ref();
   const showEditModal = (id) => {
@@ -238,10 +238,10 @@
     upgradeModal.value.show(row);
   };
 
-  //   const downgradeModal = ref();
-  //   const showDownModal = (id, name) => {
-  //     downgradeModal.value.show(id, name);
-  //   };
+  const downgradeModal = ref();
+  const showDownModal = (row) => {
+    downgradeModal.value.show(row);
+  };
 
   const searchFormRef = ref();
   const loadDataTable = async (params) => {

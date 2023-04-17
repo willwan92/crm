@@ -1,7 +1,22 @@
 <template>
-  <n-modal v-model:show="modalVisible" preset="dialog" title="客户升级申请" :mask-closable="false" style="width: 600px">
-    <n-form ref="formRef" :model="formParams" :rules="rules" label-placement="left" label-align="right" label-width="auto"
-      size="medium" require-mark-placement="right-hanging" style="margin: 30px 30px 0">
+  <n-modal
+    v-model:show="modalVisible"
+    preset="dialog"
+    title="客户升级申请"
+    :mask-closable="false"
+    style="width: 600px"
+  >
+    <n-form
+      ref="formRef"
+      :model="formParams"
+      :rules="rules"
+      label-placement="left"
+      label-align="right"
+      label-width="auto"
+      size="medium"
+      require-mark-placement="right-hanging"
+      style="margin: 30px 30px 0"
+    >
       <n-form-item label="客户名称" path="">
         <n-input v-model:value="customerName" readonly placeholder="" />
       </n-form-item>
@@ -36,7 +51,6 @@
         </n-form-item>
       </div>
 
-
       <div v-show="currentLevel === 'B'">
         <n-form-item label="认购房源" path="offerHouseResource">
           <n-input v-model:value="formParams.offerHouseResource" placeholder="" />
@@ -63,19 +77,25 @@
           </n-input>
         </n-form-item>
         <n-form-item label="首付期限" path="downPaymentTime">
-          <n-input v-model:value="formParams.downPaymentTime" placeholder="" />
+          <n-date-picker v-model:value="formParams.downPaymentTime" type="date" placeholder="" />
         </n-form-item>
       </div>
 
       <n-form-item label="审批人" path="approveAccountId">
-        <n-select v-model:value="formParams.approveAccountId" label-field="label" value-field="value"
-          :options="approveAccountOptions" placeholder="请选择" />
+        <n-select
+          v-model:value="formParams.approveAccountId"
+          label-field="label"
+          value-field="value"
+          :options="approveAccountOptions"
+          placeholder="请选择"
+        />
       </n-form-item>
-
     </n-form>
     <template #action>
       <n-space>
-        <n-button type="info" :loading="isConfirming" @click="handleConfirmClick">发起申请</n-button>
+        <n-button type="info" :loading="isConfirming" @click="handleConfirmClick"
+          >发起申请</n-button
+        >
         <n-button @click="modalVisible = false">取消</n-button>
       </n-space>
     </template>
@@ -83,203 +103,210 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, defineExpose, defineEmits } from 'vue';
-import { FormRules } from 'naive-ui';
-import { MOBILE_REGEXP, POSITIVE_FLOAT_REGEXP } from '@/enums/validatorEnum';
-import { getAuditAccountList, upgrade } from '@/api/audit';
+  import { reactive, ref, unref, defineExpose, defineEmits } from 'vue';
+  import { FormRules } from 'naive-ui';
+  import { MOBILE_REGEXP, POSITIVE_FLOAT_REGEXP } from '@/enums/validatorEnum';
+  import { getAuditAccountList, upgrade } from '@/api/audit';
 
-const formRef = ref();
+  const formRef = ref();
 
-const currentLevel = ref('D');
-const upgradeMap = {
-  E: {
-    title: 'D',
-    params: [],
-  },
-  D: {
-    title: 'C',
-    params: [
-      'visitName',
-      'visitPhone',
-      'visitTime'
-    ],
-    rules: {
-      visitName: [
-        {
-          required: true,
-          trigger: ['blur', 'input'],
-          message: '请输入来访人员',
-        },
-      ],
-      visitPhone: [
-        { required: true, trigger: ['blur', 'input'], message: '请输入来访人电话' },
-        { pattern: MOBILE_REGEXP, trigger: ['blur', 'input'], message: '手机号格式错误' },
-      ],
-      visitTime: [
-        {
-          required: true,
-          type: 'integer',
-          trigger: ['change'],
-          message: '请输入来访时间',
-        },
-      ],
-    }
-  },
-  C: {
-    title: 'B',
-    params: [
-      'lockHouseArea',
-      'lockHouseResource',
-      'lockIntendedAmount'
-    ],
-    rules: {
-      lockHouseResource: [
-        {
-          required: true,
-          trigger: ['blur', 'input'],
-          message: '请输入锁定房源',
-        },
-      ],
-      lockHouseArea: [
-        { required: true, trigger: ['blur', 'input'], message: '请输入锁定房源面积' },
-        { pattern: POSITIVE_FLOAT_REGEXP, trigger: ['blur', 'input'], message: '请输入正整数或保留两位小数' },
-      ],
-      lockIntendedAmount: [
-        { required: true, trigger: ['blur', 'input'], message: '请输入意向金额' },
-        { pattern: POSITIVE_FLOAT_REGEXP, trigger: ['blur', 'input'], message: '请输入正整数或保留两位小数' },
-      ],
-    }
-  },
-  B: {
-    title: 'A',
-    params: [
-      'depositAmount',
-      'offerHouseArea',
-      'offerHouseResource'
-    ],
-    rules: {
-      offerHouseResource: [
-        {
-          required: true,
-          trigger: ['blur', 'input'],
-          message: '请输入认购房源',
-        },
-      ],
-      offerHouseArea: [
-        { required: true, trigger: ['blur', 'input'], message: '请输入认购房源面积' },
-        { pattern: POSITIVE_FLOAT_REGEXP, trigger: ['blur', 'input'], message: '请输入正整数或保留两位小数' },
-      ],
-      depositAmount: [
-        { required: true, trigger: ['blur', 'input'], message: '请输入定金金额' },
-        { pattern: POSITIVE_FLOAT_REGEXP, trigger: ['blur', 'input'], message: '请输入正整数或保留两位小数' },
-      ],
-    }
-  },
-  A: {
-    title: 'O',
-    params: [
-      'downPaymentAmount',
-      'downPaymentTime',
-      'signTime'
-    ],
-    rules: {
-      depositAmount: [
-        { required: true, trigger: ['blur', 'input'], message: '请输入首付款' },
-        { pattern: POSITIVE_FLOAT_REGEXP, trigger: ['blur', 'input'], message: '请输入正整数或保留两位小数' },
-      ],
-      downPaymentTime: [
-        {
-          required: true,
-          type: 'integer',
-          trigger: ['change'],
-          message: '请输入首付期限',
-        },
-      ],
-      signTime: [
-        {
-          required: true,
-          type: 'integer',
-          trigger: ['change'],
-          message: '请输入签约时间',
-        },
-      ],
-    }
-  },
-}
-
-const approveAccountOptions = ref();
-
-const defaultParams = () => ({
-  "approveAccountId": "",
-  "customerId": "",
-  "depositAmount": "",
-  "downPaymentAmount": "",
-  "downPaymentTime": undefined,
-  "lockHouseArea": "",
-  "lockHouseResource": "",
-  "lockIntendedAmount": "",
-  "offerHouseArea": "",
-  "offerHouseResource": "",
-  "signTime": undefined,
-  "visitName": "",
-  "visitPhone": "",
-  "visitTime": undefined
-});
-let formParams = reactive(defaultParams());
-
-const isConfirming = ref(false);
-let rules = reactive<FormRules>({
-  approveAccountId: [
-    {
-      required: true,
-      trigger: ['blur'],
-      message: '请选择审批人',
+  const currentLevel = ref('D');
+  const upgradeMap = {
+    E: {
+      title: 'D',
+      params: [],
     },
-  ],
-});
+    D: {
+      title: 'C',
+      params: ['visitName', 'visitPhone', 'visitTime'],
+      rules: {
+        visitName: [
+          {
+            required: true,
+            trigger: ['blur', 'input'],
+            message: '请输入来访人员',
+          },
+        ],
+        visitPhone: [
+          { required: true, trigger: ['blur', 'input'], message: '请输入来访人电话' },
+          { pattern: MOBILE_REGEXP, trigger: ['blur', 'input'], message: '手机号格式错误' },
+        ],
+        visitTime: [
+          {
+            required: true,
+            type: 'integer',
+            trigger: ['change'],
+            message: '请输入来访时间',
+          },
+        ],
+      },
+    },
+    C: {
+      title: 'B',
+      params: ['lockHouseArea', 'lockHouseResource', 'lockIntendedAmount'],
+      rules: {
+        lockHouseResource: [
+          {
+            required: true,
+            trigger: ['blur', 'input'],
+            message: '请输入锁定房源',
+          },
+        ],
+        lockHouseArea: [
+          { required: true, trigger: ['blur', 'input'], message: '请输入锁定房源面积' },
+          {
+            pattern: POSITIVE_FLOAT_REGEXP,
+            trigger: ['blur', 'input'],
+            message: '请输入正整数或保留两位小数',
+          },
+        ],
+        lockIntendedAmount: [
+          { required: true, trigger: ['blur', 'input'], message: '请输入意向金额' },
+          {
+            pattern: POSITIVE_FLOAT_REGEXP,
+            trigger: ['blur', 'input'],
+            message: '请输入正整数或保留两位小数',
+          },
+        ],
+      },
+    },
+    B: {
+      title: 'A',
+      params: ['depositAmount', 'offerHouseArea', 'offerHouseResource'],
+      rules: {
+        offerHouseResource: [
+          {
+            required: true,
+            trigger: ['blur', 'input'],
+            message: '请输入认购房源',
+          },
+        ],
+        offerHouseArea: [
+          { required: true, trigger: ['blur', 'input'], message: '请输入认购房源面积' },
+          {
+            pattern: POSITIVE_FLOAT_REGEXP,
+            trigger: ['blur', 'input'],
+            message: '请输入正整数或保留两位小数',
+          },
+        ],
+        depositAmount: [
+          { required: true, trigger: ['blur', 'input'], message: '请输入定金金额' },
+          {
+            pattern: POSITIVE_FLOAT_REGEXP,
+            trigger: ['blur', 'input'],
+            message: '请输入正整数或保留两位小数',
+          },
+        ],
+      },
+    },
+    A: {
+      title: 'O',
+      params: ['downPaymentAmount', 'downPaymentTime', 'signTime'],
+      rules: {
+        downPaymentAmount: [
+          { required: true, trigger: ['blur', 'input'], message: '请输入首付款' },
+          {
+            pattern: POSITIVE_FLOAT_REGEXP,
+            trigger: ['blur', 'input'],
+            message: '请输入正整数或保留两位小数',
+          },
+        ],
+        downPaymentTime: [
+          {
+            required: true,
+            type: 'integer',
+            trigger: ['change'],
+            message: '请输入首付期限',
+          },
+        ],
+        signTime: [
+          {
+            required: true,
+            type: 'integer',
+            trigger: ['change'],
+            message: '请输入签约时间',
+          },
+        ],
+      },
+    },
+  };
 
+  const approveAccountOptions = ref();
 
-const emit = defineEmits(['ok']);
-const handleConfirmClick = () => {
-  formRef.value?.validate((errors) => {
-    if (errors) {
-      return;
-    }
-    isConfirming.value = true;
-
-    upgrade(formParams)
-      .then(() => {
-        emit('ok');
-        modalVisible.value = false;
-      })
-      .finally(() => {
-        isConfirming.value = false;
-      });
+  const defaultParams = () => ({
+    approveAccountId: '',
+    customerId: '',
+    depositAmount: '',
+    downPaymentAmount: '',
+    downPaymentTime: undefined,
+    lockHouseArea: '',
+    lockHouseResource: '',
+    lockIntendedAmount: '',
+    offerHouseArea: '',
+    offerHouseResource: '',
+    signTime: undefined,
+    visitName: '',
+    visitPhone: '',
+    visitTime: undefined,
   });
-};
+  let formParams = reactive(defaultParams());
 
-const modalVisible = ref(false);
-const customerName = ref();
-const show = async (row) => {
-  customerName.value = row.customerName;
-  currentLevel.value = row.customerLevel,
-    currentLevel.value = 'E',
+  const isConfirming = ref(false);
+  let rules = reactive<FormRules>({
+    approveAccountId: [
+      {
+        required: true,
+        trigger: ['blur'],
+        message: '请选择审批人',
+      },
+    ],
+  });
+
+  const emit = defineEmits(['ok']);
+  const handleConfirmClick = () => {
+    formRef.value?.validate((errors) => {
+      if (errors) {
+        return;
+      }
+      isConfirming.value = true;
+
+      upgrade(formParams)
+        .then(() => {
+          emit('ok');
+          modalVisible.value = false;
+        })
+        .finally(() => {
+          isConfirming.value = false;
+        });
+    });
+  };
+
+  const modalVisible = ref(false);
+  const customerName = ref();
+  const show = async (row) => {
+    customerName.value = row.customerName;
+    currentLevel.value = row.customerLevel;
+    formParams = Object.assign(unref(formParams), defaultParams());
     formParams.customerId = row.id;
-  formRef.value?.restoreValidation();
-  rules = Object.assign(rules, upgradeMap[currentLevel.value].rules);
-  modalVisible.value = true;
+    formRef.value?.restoreValidation();
+    rules = Object.assign(rules, upgradeMap[currentLevel.value].rules);
+    modalVisible.value = true;
 
-  getAuditAccountList(row.id, row.accountResourceId).then(res => {
-    approveAccountOptions.value = res.map(item => ({
-      value: item.accountId,
-      label: `${item.accountName}（${item.accountPositionName}）`
-    }))
-  })
-};
+    getAuditAccountList(row.id, row.accountResourceId).then((res) => {
+      approveAccountOptions.value = res.map((item) => ({
+        value: item.accountId,
+        label: `${item.accountName}（${item.accountPositionName}）`,
+      }));
+    });
+  };
 
-defineExpose({
-  show,
-});
+  defineExpose({
+    show,
+  });
 </script>
 
-<style></style>
+<style lang="less" scoped>
+  .n-date-picker {
+    width: 378px;
+  }
+</style>
