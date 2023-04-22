@@ -16,3 +16,18 @@ export function setCustomersQuantityRules(data) {
     data,
   });
 }
+
+export function getFallingRules() {
+  return http.request<Result>({
+    url: '/rule/daysLimit/get',
+    method: RequestEnum.GET,
+  });
+}
+
+export function setFallingRules(data) {
+  return http.request<Result>({
+    url: '/rule/daysLimit/save',
+    method: RequestEnum.POST,
+    data,
+  });
+}
