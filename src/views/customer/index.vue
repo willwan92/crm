@@ -30,7 +30,7 @@
   import { reactive, ref, h } from 'vue';
   import { useRouter } from 'vue-router';
   import { BasicTable } from '@/components/Table';
-  import { getList, del } from '@/api/customer';
+  import { getList, del, throwCustomer } from '@/api/customer';
   import EditModal from './components/EditModal.vue';
   import FollowUpModal from './components/FollowUpModal.vue';
   import CooperateModal from './components/CooperateModal.vue';
@@ -141,7 +141,7 @@
             },
             { default: () => '升级' }
           ),
-        row.customerLevel !== 'E' &&
+        row.customerLevel < 'D' &&
           h(
             NButton,
             {
@@ -165,18 +165,17 @@
             },
             { default: () => '合作' }
           ),
-        // row.customerLevel === 'E' &&
-        //   h(
-        //     NButton,
-        //     {
-        //       size: 'small',
-        //       type: 'info',
-        //       tertiary: true,
-        //       style: 'margin-right:5px',
-        //       onClick: () => handleDiscardClick(row),
-        //     },
-        //     { default: () => '抛入公海' }
-        //   ),
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'info',
+            tertiary: true,
+            style: 'margin-right:5px',
+            onClick: () => handleDiscardClick(row),
+          },
+          { default: () => '抛入公海' }
+        ),
         row.customerLevel === 'E' &&
           h(
             NButton,
@@ -206,19 +205,19 @@
     });
   }
 
-  //   function handleDiscardClick(row) {
-  //     dialog.warning({
-  //       title: '提示',
-  //       content: `确定要把客户 ${row.customerName} 抛入公海吗？`,
-  //       positiveText: '确定',
-  //       negativeText: '取消',
-  //       onPositiveClick: async () => {
-  //         // await deleteUser(row.id);
-  //         message.success(`客户 ${row.customerName} 已抛入公海`);
-  //         reloadTable();
-  //       },
-  //     });
-  //   }
+  function handleDiscardClick(row) {
+    dialog.warning({
+      title: '提示',
+      content: `确定要把客户 ${row.customerName} 抛入公海吗？`,
+      positiveText: '确定',
+      negativeText: '取消',
+      onPositiveClick: async () => {
+        await throwCustomer(row.id);
+        message.success(`客户 ${row.customerName} 已抛入公海`);
+        reloadTable();
+      },
+    });
+  }
 
   const editModal = ref();
   const showEditModal = (id) => {

@@ -60,3 +60,13 @@ export function updateFollowUpRecord(data) {
     data,
   });
 }
+
+export function throwCustomer(customerId: string) {
+  return http.request<Result>({
+    url: '/customer/throw',
+    method: RequestEnum.POST,
+    data: {
+      customerId,
+    },
+  });
+}
