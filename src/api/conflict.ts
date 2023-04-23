@@ -5,7 +5,7 @@ import { PageRes } from '@/api/models/basic';
 
 export function getList(params) {
   return http.request<Result<PageRes>>({
-    url: '/cooperate/cooperate/list',
+    url: '/conflict/list',
     method: RequestEnum.GET,
     params,
   });

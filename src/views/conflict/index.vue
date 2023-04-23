@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
   import { BasicTable } from '@/components/Table';
-  import { getList } from '@/api/cooperate';
+  import { getList } from '@/api/conflict';
   import { formatToDateTime } from '@/utils/dateUtil';
 
   const columns = [
