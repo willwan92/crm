@@ -12,43 +12,43 @@ export function getUserDetail(id) {
 }
 
 export function getUserList(params: QueryUserReq) {
-  return http.request<Result<PageRes<QueryUserRes>>>(
-    {
-      url: '/account/list',
-      method: RequestEnum.GET,
-      params
-    }
-  );
+  return http.request<Result<PageRes<QueryUserRes>>>({
+    url: '/account/list',
+    method: RequestEnum.GET,
+    params,
+  });
 }
 
 export function saveUser(data) {
-  return http.request<Result>(
-    {
-      url: '/account/saveAccountAndAuthorization',
-      method: RequestEnum.POST,
-      data
-    },
-  );
+  return http.request<Result>({
+    url: '/account/saveAccountAndAuthorization',
+    method: RequestEnum.POST,
+    data,
+  });
+}
+
+export function modifyPwd(data) {
+  return http.request<Result>({
+    url: '/account/resetPwd',
+    method: RequestEnum.POST,
+    data,
+  });
 }
 
 export function deleteUser(userId: string) {
-  return http.request<Result>(
-    {
-      url: '/account/delete',
-      method: RequestEnum.GET,
-      params: {
-        userId
-      }
+  return http.request<Result>({
+    url: '/account/delete',
+    method: RequestEnum.GET,
+    params: {
+      userId,
     },
-  );
+  });
 }
 
 export function updateUserStatus(params: UpdateUserStatusReq) {
-  return http.request<Result>(
-    {
-      url: '/account/slap',
-      method: RequestEnum.GET,
-      params
-    },
-  );
+  return http.request<Result>({
+    url: '/account/slap',
+    method: RequestEnum.GET,
+    params,
+  });
 }

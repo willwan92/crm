@@ -19,7 +19,7 @@
     <div class="layout-header-left" v-else>
       <Logo :collapsed="collapsed" />
       <!-- 菜单收起 -->
-      <!-- <div
+      <div
         class="ml-1 layout-header-trigger layout-header-trigger-min"
         @click="() => $emit('update:collapsed', !collapsed)"
       >
@@ -29,7 +29,7 @@
         <n-icon size="18" v-else>
           <MenuFoldOutlined />
         </n-icon>
-      </div> -->
+      </div>
       <!-- 刷新 -->
       <div
         class="mr-1 layout-header-trigger layout-header-trigger-min"
@@ -122,6 +122,8 @@
   </div>
   <!--项目配置-->
   <ProjectSetting ref="drawerSetting" />
+  <!--修改密码-->
+  <ModifyPwdModal ref="modifyPwdModal" />
 </template>
 
 <script lang="ts">
@@ -133,6 +135,7 @@
   import { useUserStore } from '@/store/modules/user';
   import { useLockscreenStore } from '@/store/modules/lockscreen';
   import ProjectSetting from './ProjectSetting.vue';
+  import ModifyPwdModal from './ModifyPwdModal.vue';
   import { AsideMenu } from '@/layout/components/Menu';
   import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
   import { websiteConfig } from '@/config/website.config';
@@ -140,7 +143,7 @@
 
   export default defineComponent({
     name: 'PageHeader',
-    components: { ...components, NDialogProvider, ProjectSetting, AsideMenu, Logo },
+    components: { ...components, NDialogProvider, ProjectSetting, AsideMenu, Logo, ModifyPwdModal },
     props: {
       collapsed: {
         type: Boolean,
@@ -249,6 +252,12 @@
         });
       };
 
+      // 修改密码
+      const modifyPwdModal = ref();
+      const showModifyPwdModal = () => {
+        modifyPwdModal.value.show(userName);
+      };
+
       // 切换全屏图标
       const toggleFullscreenIcon = () =>
         (state.fullscreenIcon =
@@ -280,6 +289,10 @@
       ];
       const avatarOptions = [
         {
+          label: '修改密码',
+          key: 1,
+        },
+        {
           label: '退出登录',
           key: 2,
         },
@@ -288,6 +301,9 @@
       //头像下拉菜单
       const avatarSelect = (key) => {
         switch (key) {
+          case 1:
+            showModifyPwdModal();
+            break;
           case 2:
             doLogout();
             break;
@@ -312,6 +328,7 @@
         breadcrumbList,
         reloadPage,
         drawerSetting,
+        modifyPwdModal,
         openSetting,
         getInverted,
         getMenuLocation,
