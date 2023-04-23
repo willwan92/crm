@@ -6,27 +6,27 @@
     label-width="auto"
     require-mark-placement="right-hanging"
   >
-    <n-form-item label="所属城市" path="city">
+    <n-form-item label="所属城市" path="cityId">
       <n-select
-        v-model:value="searchParams.city"
+        v-model:value="searchParams.cityId"
         style="width: 150px"
         clearable
         :options="cities"
       />
     </n-form-item>
-    <n-form-item label="所属项目" path="project">
+    <n-form-item label="所属项目" path="projectId">
       <n-select
-        v-model:value="searchParams.project"
+        v-model:value="searchParams.projectId"
         style="width: 150px"
         clearable
         :options="projects"
       />
     </n-form-item>
-    <n-form-item label="招商角色" path="role">
+    <n-form-item label="招商角色" path="positionCode">
       <n-select
-        v-model:value="searchParams.role"
+        v-model:value="searchParams.positionCode"
         label-field="positionName"
-        value-field="id"
+        value-field="positionCode"
         style="width: 150px"
         clearable
         :options="accoutPositionOptions"
@@ -126,10 +126,10 @@
   getProjects();
 
   const defaultParams = () => ({
-    city: '',
-    project: '',
-    role: '',
-    customerLevel: '',
+    cityId: undefined,
+    projectId: undefined,
+    positionCode: undefined,
+    customerLevel: undefined,
     timerange: [Date.now() - 86400000 * 7, Date.now()],
   });
 

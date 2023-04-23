@@ -1,14 +1,14 @@
 <template>
   <n-card title="客户排名" style="margin-bottom: 12px">
-    <RankingForm ref="rankingFormRef" @reload-ranking="reloadRanking" />
-    <n-grid x-gap="20" :cols="3">
+    <RankingForm ref="rankingFormRef" @reload-ranking="loadRankingData" />
+    <n-grid x-gap="80" :cols="3">
       <n-gi class="ranking-item">
         <div class="title-wrapper">
           <n-button strong secondary type="info" class="title"> 城市排名 </n-button>
         </div>
-        <div class="content-wrapper">
-          <div v-for="(item, index) in cityData" :key="item.city">
-            <span :style="{ color: getColor(index) }">N0.{{ index + 1 }} {{ item.city }}</span>
+        <div v-if="cityData?.length" class="content-wrapper">
+          <div v-for="(item, index) in cityData" :key="item.name">
+            <span :style="{ color: getColor(index) }">N0.{{ index + 1 }} {{ item.name }}</span>
             <n-progress
               type="line"
               class="progress"
@@ -21,15 +21,17 @@
             </n-progress>
           </div>
         </div>
+
+        <n-empty v-else description="暂无数据" style="text-align: left" />
       </n-gi>
 
       <n-gi class="ranking-item">
         <div class="title-wrapper">
           <n-button strong secondary type="info" class="title"> 项目排名 </n-button>
         </div>
-        <div class="content-wrapper">
-          <div v-for="(item, index) in cityData" :key="item.city">
-            <span :style="{ color: getColor(index) }">N0.{{ index + 1 }} {{ item.city }}</span>
+        <div v-if="projectData?.length" class="content-wrapper">
+          <div v-for="(item, index) in projectData" :key="item.name">
+            <span :style="{ color: getColor(index) }">N0.{{ index + 1 }} {{ item.name }}</span>
             <n-progress
               type="line"
               class="progress"
@@ -42,14 +44,16 @@
             </n-progress>
           </div>
         </div>
+
+        <n-empty v-else description="暂无数据" style="text-align: left" />
       </n-gi>
       <n-gi class="ranking-item">
         <div class="title-wrapper">
           <n-button strong secondary type="info" class="title"> 人员排名 </n-button>
         </div>
-        <div class="content-wrapper">
-          <div v-for="(item, index) in cityData" :key="item.city">
-            <span :style="{ color: getColor(index) }">N0.{{ index + 1 }} {{ item.city }}</span>
+        <div v-if="accountData?.length" class="content-wrapper">
+          <div v-for="(item, index) in accountData" :key="item.name">
+            <span :style="{ color: getColor(index) }">N0.{{ index + 1 }} {{ item.name }}</span>
             <n-progress
               type="line"
               class="progress"
@@ -62,6 +66,8 @@
             </n-progress>
           </div>
         </div>
+
+        <n-empty v-else description="暂无数据" style="text-align: left" />
       </n-gi>
     </n-grid>
   </n-card>
@@ -72,17 +78,16 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { ref, onMounted } from 'vue';
   import { BasicTable } from '@/components/Table';
   import { formatToDateTime } from '@/utils/dateUtil';
-  import { getpublicPoolCustomers } from '@/api/customerPool';
+  import { getRankingList, getCustomerList } from '@/api/cockpit';
   import SearchForm from './components/SearchForm.vue';
   import RankingForm from './components/RankingForm.vue';
 
   import { useThemeVars } from 'naive-ui';
 
   const themeVars = useThemeVars();
-  console.log(themeVars.value);
 
   const colors = ref([
     themeVars.value.errorColor,
@@ -95,129 +100,110 @@
     return index < 3 ? colors.value[index] : colors.value[3];
   };
 
-  const cityData = ref([
-    {
-      city: '北京',
-      count: 90,
-      percentage: 90,
-    },
-    {
-      city: '上海',
-      count: 78,
-      percentage: 78,
-    },
-    {
-      city: '北京',
-      count: 60,
-      percentage: 60,
-    },
-    {
-      city: '上海',
-      count: 58,
-      percentage: 58,
-    },
-    {
-      city: '北京',
-      count: 50,
-      percentage: 50,
-    },
-    {
-      city: '上海',
-      count: 28,
-      percentage: 28,
-    },
-    {
-      city: '北京',
-      count: 35,
-      percentage: 35,
-    },
-    {
-      city: '上海',
-      count: 13,
-      percentage: 13,
-    },
-    {
-      city: '北京',
-      count: 11,
-      percentage: 11,
-    },
-    {
-      city: '上海',
-      count: 8,
-      percentage: 8,
-    },
-  ]);
-
-  const rankingFormRef = ref();
-  //   const loadDataTable = async (params) => {
-  //     const searchParams = searchFormRef.value.searchParams;
-  //     const res = await getpublicPoolCustomers({
-  //       areaId: searchParams.areaId,
-  //       industry: searchParams.industry,
-  //       //   startTime: searchParams.timerange[0],
-  //       //   endTime: searchParams.timerange[1],
-  //       ...params,
-  //     });
-  //     res.records = res.records.map((item, index) => {
-  //       item.createTime = formatToDateTime(item.createTime);
-  //       item.fallTime = formatToDateTime(item.fallTime);
-  //       item.index = (res.current - 1) * res.size + index + 1;
-  //       return item;
-  //     });
-  //     return res;
-  //   };
-
-  //   const tableRef = ref();
-  function reloadRanking() {
-    // tableRef.value.reload();
+  interface rankingData {
+    name: string;
+    count: number;
+    percentage: number;
   }
 
+  const cityData = ref<rankingData[]>();
+  const projectData = ref<rankingData[]>();
+  const accountData = ref<rankingData[]>();
+
+  const rankingFormRef = ref();
+  const loadRankingData = async () => {
+    const rankingParams = rankingFormRef.value.rankingParams;
+    const { cityRankingDTO, projectRankingDTO, accountRankingDTO } = await getRankingList({
+      customerLevel: rankingParams.customerLevel,
+      startTime: rankingParams.timerange ? rankingParams.timerange[0] : null,
+      endTime: rankingParams.timerange ? rankingParams.timerange[1] : null,
+    });
+
+    if (Array.isArray(cityRankingDTO) && cityRankingDTO.length) {
+      const firstCount = cityRankingDTO[0].count;
+      cityData.value = cityRankingDTO.map((item) => {
+        item.percentage = Math.floor((item.count / firstCount) * 100);
+        return item;
+      });
+    }
+
+    if (Array.isArray(projectRankingDTO) && projectRankingDTO.length) {
+      const firstCount = projectRankingDTO[0].count;
+      projectData.value = projectRankingDTO.map((item) => {
+        item.percentage = Math.floor((item.count / firstCount) * 100);
+        return item;
+      });
+    }
+
+    if (Array.isArray(accountRankingDTO) && accountRankingDTO.length) {
+      const firstCount = accountRankingDTO[0].count;
+      accountData.value = accountRankingDTO.map((item) => {
+        item.percentage = Math.floor((item.count / firstCount) * 100);
+        return item;
+      });
+    }
+  };
+  onMounted(loadRankingData);
+
   const columns = [
-    {
-      type: 'selection',
-    },
     {
       title: '序号',
       width: 100,
       key: 'index',
     },
     {
+      title: '所属城市',
+      key: 'cityName',
+    },
+    {
+      title: '所属项目',
+      key: 'accountResourceName',
+    },
+    {
+      title: '招商角色',
+      key: 'sourceAccountName',
+    },
+    {
+      title: '招商人员',
+      key: 'sourceAccountName',
+    },
+    {
+      title: '客户等级',
+      key: 'customerLevel',
+    },
+    {
       title: '客户名称',
       key: 'customerName',
     },
     {
-      title: '客户所在地区',
-      key: 'mergerName',
+      title: '需求类型',
+      key: 'unitType',
     },
     {
-      title: '所属行业',
-      key: 'industry',
+      title: '需求面积',
+      key: 'requireArea',
     },
     {
-      title: '创建时间',
+      title: '审批通过时间',
       width: 160,
-      key: 'createTime',
-    },
-    {
-      title: '掉入公海时间',
-      key: 'fallTime',
-      width: 160,
+      key: 'approvalTime',
     },
   ];
 
   const searchFormRef = ref();
   const loadDataTable = async (params) => {
     const searchParams = searchFormRef.value.searchParams;
-    const res = await getpublicPoolCustomers({
-      areaId: searchParams.areaId,
-      industry: searchParams.industry,
-      //   startTime: searchParams.timerange[0],
-      //   endTime: searchParams.timerange[1],
+    const res = await getCustomerList({
+      cityId: searchParams.cityId,
+      projectId: searchParams.projectId,
+      positionCode: searchParams.positionCode,
+      customerLevel: searchParams.customerLevel,
+      startTime: searchParams.timerange ? searchParams.timerange[0] : null,
+      endTime: searchParams.timerange ? searchParams.timerange[1] : null,
       ...params,
     });
     res.records = res.records.map((item, index) => {
-      item.createTime = formatToDateTime(item.createTime);
-      item.fallTime = formatToDateTime(item.fallTime);
+      item.approvalTime = formatToDateTime(item.approvalTime);
       item.index = (res.current - 1) * res.size + index + 1;
       return item;
     });
@@ -245,10 +231,12 @@
         overflow-y: auto;
       }
       .progress {
-        display: inline-block;
-        margin-left: 20px;
-        width: calc(100% - 80px);
+        width: 100%;
       }
+    }
+
+    .n-empty {
+      margin-top: 60px;
     }
   }
 </style>

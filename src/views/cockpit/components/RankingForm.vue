@@ -18,7 +18,7 @@
       />
     </n-form-item>
     <n-form-item label="时间范围" path="timerange">
-      <n-date-picker v-model:value="rankingParams.timerange" type="datetimerange" />
+      <n-date-picker v-model:value="rankingParams.timerange" type="datetimerange" clearable />
     </n-form-item>
     <n-space>
       <n-button type="info" @click="emitReloadTable"> 查询 </n-button>
@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { unref, reactive, ref, defineExpose } from 'vue';
+  import { unref, reactive, defineExpose } from 'vue';
 
   const levelOptions = [
     {
@@ -54,8 +54,8 @@
   ];
 
   const defaultParams = () => ({
-    customerLevel: '',
-    timerange: [Date.now() - 86400000 * 7, Date.now()],
+    customerLevel: undefined,
+    timerange: [Date.now() - 86400000 * 30, Date.now()],
   });
 
   let rankingParams = reactive(defaultParams());
