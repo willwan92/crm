@@ -2,16 +2,26 @@
   <n-card :bordered="false" class="proCard">
     <SearchForm ref="searchFormRef" @reload-table="reloadTable" />
 
-    <n-button type="info" ghost title="申请至我的公海池"> 客户申请 </n-button>
+    <n-button
+      type="info"
+      ghost
+      title="申请至我的公海池"
+      :disabled="!checkedRowKeys.length"
+      @click="showApplyModal"
+    >
+      客户申请
+    </n-button>
 
     <BasicTable
       :toolbarShow="false"
       :columns="columns"
       :request="loadDataTable"
       ref="tableRef"
-      :row-key="(row) => row.id"
+      :row-key="(row) => row.customerCode"
       @update:checked-row-keys="handleCheck"
     />
+
+    <ApplyModal ref="applyModal" @ok="reloadTable" />
   </n-card>
 </template>
 
@@ -21,6 +31,7 @@
   import { formatToDateTime } from '@/utils/dateUtil';
   import { getpublicPoolCustomers } from '@/api/customerPool';
   import SearchForm from './components/SearchForm.vue';
+  import ApplyModal from './components/ApplyModal.vue';
   import { DataTableRowKey } from 'naive-ui';
 
   const columns = [
@@ -56,17 +67,15 @@
     },
   ];
 
-  const checkedRowKeysRef = ref<DataTableRowKey[]>([]);
+  const checkedRowKeys = ref<DataTableRowKey[]>([]);
   function handleCheck(rowKeys: DataTableRowKey[]) {
-    console.log(rowKeys);
-
-    checkedRowKeysRef.value = rowKeys;
+    checkedRowKeys.value = rowKeys;
   }
 
-  //   const rejectModal = ref();
-  //   const showRejectModal = (row) => {
-  //     rejectModal.value.show(row.auditRecordId, row.customerName);
-  //   };
+  const applyModal = ref();
+  const showApplyModal = () => {
+    applyModal.value.show(checkedRowKeys.value);
+  };
 
   const searchFormRef = ref();
   const loadDataTable = async (params) => {

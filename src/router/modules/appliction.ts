@@ -30,7 +30,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'index',
         name: `application_index`,
         meta: {
-          title: '升降级申请',
+          title: '申请记录',
           activeMenu: 'application_index',
         },
         component: () => import('@/views/application/index.vue'),

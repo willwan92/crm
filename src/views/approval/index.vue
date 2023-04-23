@@ -1,5 +1,5 @@
 <template>
-  <n-card :bordered="false" class="proCard">
+  <n-card>
     <SearchForm ref="searchFormRef" @reload-table="reloadTable" />
 
     <BasicTable
@@ -42,17 +42,19 @@
       title: '客户名称',
       key: 'customerName',
       render(row) {
-        return h(
-          NButton,
-          {
-            type: 'info',
-            text: true,
-            onClick: () => {
-              router.push('/customer/customer_detail/' + row.customerId);
-            },
-          },
-          { default: () => row.customerName }
-        );
+        return row.customerId
+          ? h(
+              NButton,
+              {
+                type: 'info',
+                text: true,
+                onClick: () => {
+                  router.push('/customer/customer_detail/' + row.customerId);
+                },
+              },
+              { default: () => row.customerName }
+            )
+          : row.customerName;
       },
     },
     {

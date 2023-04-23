@@ -30,7 +30,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'index',
         name: `approval_index`,
         meta: {
-          title: '升降级审批',
+          title: '审批管理',
           activeMenu: 'approval_index',
         },
         component: () => import('@/views/approval/index.vue'),
