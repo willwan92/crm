@@ -22,6 +22,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       sort: 6,
       isRoot: true,
+      permissions: ['300'],
       activeMenu: 'approval_index',
       icon: renderIcon(AuditOutlined),
     },
@@ -31,6 +32,7 @@ const routes: Array<RouteRecordRaw> = [
         name: `approval_index`,
         meta: {
           title: '审批管理',
+          permissions: ['300'],
           activeMenu: 'approval_index',
         },
         component: () => import('@/views/approval/index.vue'),

@@ -54,7 +54,6 @@ export function createRouterGuards(router: Router) {
 
     // 获取用户详情信息
     const userInfo = await userStore.GetInfo(userStore.info.id || userStore.info.accountId);
-
     const routes = await asyncRouteStore.generateRoutes(userInfo);
 
     // 动态添加可访问路由表

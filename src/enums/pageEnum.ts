@@ -5,8 +5,14 @@ export enum PageEnum {
   //重定向
   REDIRECT = '/redirect',
   REDIRECT_NAME = 'Redirect',
-  // 首页
-  BASE_HOME = '/user/index',
+  // 管理员首页
+  ADMIN_HOME = '/user/index',
+  // 高层管理首页
+  SENIOR_HOME = '/cockpit/index',
+  // 中层管理首页
+  MIDDLE_HOME = '/approval/index',
+  // 基层员工首页
+  BASE_HOME = '/customer/index',
   //首页跳转默认路由
   BASE_HOME_REDIRECT = '/user/index',
   // 错误

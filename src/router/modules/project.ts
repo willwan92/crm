@@ -22,15 +22,17 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       sort: 1,
       isRoot: true,
+      permissions: ['100'],
       activeMenu: 'project_index',
       icon: renderIcon(ProjectOutlined),
     },
     children: [
       {
         path: 'index',
-        name: `project_index`,
+        name: 'project_index',
         meta: {
           title: '项目管理',
+          permissions: ['100'],
           activeMenu: 'project_index',
         },
         component: () => import('@/views/project/index.vue'),

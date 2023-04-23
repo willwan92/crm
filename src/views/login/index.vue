@@ -68,7 +68,6 @@
   import md5 from 'md5';
   import { useUserStore } from '@/store/modules/user';
   import { useMessage } from 'naive-ui';
-  import { ResultEnum } from '@/enums/httpEnum';
   import { PageEnum } from '@/enums/pageEnum';
   import { LockClosedOutline, PersonOutline } from '@vicons/ionicons5';
   import { websiteConfig } from '@/config/website.config';
@@ -131,16 +130,35 @@
           verCode,
         };
         try {
-          await userStore.login(params);
+          const userInfo = await userStore.login(params);
+          console.log(userInfo);
+
           message.destroyAll();
           storage.remove(TABS_ROUTES);
           // const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
           message.success('登录成功，即将进入系统');
-          if (route.name === LOGIN_NAME) {
-            router.replace('/');
-          } else {
-            router.replace(PageEnum.BASE_HOME);
-          }
+          const roleHomes = [
+            {
+              path: 'ADMIN_HOME',
+              roles: ['100'],
+            },
+            {
+              path: 'SENIOR_HOME',
+              roles: ['500', '200'],
+            },
+            {
+              path: 'MIDDLE_HOME',
+              roles: ['300'],
+            },
+            {
+              path: 'BASE_HOME',
+              roles: ['400'],
+            },
+          ];
+          const homepage = roleHomes.find((item) => item.roles.includes(userInfo.roleId));
+          console.log(PageEnum[homepage]);
+
+          router.replace(PageEnum[homepage.path]);
         } catch (error) {
           refreshCaptach();
         } finally {

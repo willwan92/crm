@@ -101,12 +101,12 @@ export const useAsyncRouteStore = defineStore({
      */
     async generateRoutes(userInfo) {
       let accessedRoutes;
-      const permissionsList = userInfo.permissions || [];
+      const permissionsList = [userInfo.roleId] || [];
       const hasPermission = (route) => {
         const { meta } = route;
         const { permissions } = meta || {};
         if (!permissions) return true;
-        return permissionsList.some((item) => permissions.includes(item.value));
+        return permissionsList.some((item) => permissions.includes(item));
       };
       const { getPermissionMode } = useProjectSetting();
       const permissionMode = unref(getPermissionMode);

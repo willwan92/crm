@@ -64,7 +64,7 @@ export const useUserStore = defineStore({
         storage.set(IS_LOCKSCREEN, false);
         this.setToken(result.token);
         this.setUserInfo(result.accountInfo);
-        this.GetInfo(result.accountInfo.id);
+        return this.GetInfo(result.accountInfo.id);
       } catch (e) {
         return Promise.reject(e);
       }

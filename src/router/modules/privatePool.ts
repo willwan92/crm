@@ -22,6 +22,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       sort: 6,
       isRoot: true,
+      permissions: ['400', '300'],
       activeMenu: 'privatePool_index',
       icon: renderIcon(PersonalInjuryOutlined),
     },
@@ -31,6 +32,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'privatePool_index',
         meta: {
           title: '个人公海池',
+          permissions: ['400', '300'],
           activeMenu: 'privatePool_index',
         },
         component: () => import('@/views/privatePool/index.vue'),

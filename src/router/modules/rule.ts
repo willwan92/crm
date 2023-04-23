@@ -21,16 +21,18 @@ const routes: Array<RouteRecordRaw> = [
     component: Layout,
     meta: {
       sort: 7,
+      permissions: ['100'],
       activeMenu: 'rule_index',
       icon: renderIcon(SettingOutlined),
     },
     children: [
       {
         path: 'index',
-        name: `project_index`,
+        name: 'rule_index',
         meta: {
           title: '规则设置',
-          activeMenu: 'project_index',
+          permissions: ['100'],
+          activeMenu: 'rule_index',
         },
         component: () => import('@/views/rule/index.vue'),
       },
