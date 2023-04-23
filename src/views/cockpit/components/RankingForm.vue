@@ -1,0 +1,76 @@
+<template>
+  <n-form
+    :model="rankingParams"
+    inline
+    label-placement="left"
+    label-width="auto"
+    require-mark-placement="right-hanging"
+  >
+    <n-form-item label="客户等级" path="customerLevel">
+      <n-select
+        v-model:value="rankingParams.customerLevel"
+        label-field="label"
+        value-field="label"
+        clearable
+        :options="levelOptions"
+        style="width: 120px"
+        placeholder="全部"
+      />
+    </n-form-item>
+    <n-form-item label="时间范围" path="timerange">
+      <n-date-picker v-model:value="rankingParams.timerange" type="datetimerange" />
+    </n-form-item>
+    <n-space>
+      <n-button type="info" @click="emitReloadTable"> 查询 </n-button>
+      <n-button @click="resetParams">重置 </n-button>
+    </n-space>
+  </n-form>
+</template>
+
+<script lang="ts" setup>
+  import { unref, reactive, ref, defineExpose } from 'vue';
+
+  const levelOptions = [
+    {
+      value: 0,
+      label: 'D',
+    },
+    {
+      value: 1,
+      label: 'C',
+    },
+    {
+      value: 2,
+      label: 'B',
+    },
+    {
+      value: 3,
+      label: 'A',
+    },
+    {
+      value: 4,
+      label: 'O',
+    },
+  ];
+
+  const defaultParams = () => ({
+    customerLevel: '',
+    timerange: [Date.now() - 86400000 * 7, Date.now()],
+  });
+
+  let rankingParams = reactive(defaultParams());
+
+  defineExpose({
+    rankingParams,
+  });
+
+  function resetParams() {
+    rankingParams = Object.assign(unref(rankingParams), defaultParams());
+    emitReloadTable();
+  }
+
+  const emit = defineEmits(['reloadRanking']);
+  const emitReloadTable = () => {
+    emit('reloadRanking');
+  };
+</script>

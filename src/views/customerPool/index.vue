@@ -2,7 +2,16 @@
   <n-card :bordered="false" class="proCard">
     <SearchForm ref="searchFormRef" @reload-table="reloadTable" />
 
-    <BasicTable :toolbarShow="false" :columns="columns" :request="loadDataTable" ref="tableRef" />
+    <n-button type="info" ghost title="申请至我的公海池"> 客户申请 </n-button>
+
+    <BasicTable
+      :toolbarShow="false"
+      :columns="columns"
+      :request="loadDataTable"
+      ref="tableRef"
+      :row-key="(row) => row.id"
+      @update:checked-row-keys="handleCheck"
+    />
   </n-card>
 </template>
 
@@ -12,12 +21,15 @@
   import { formatToDateTime } from '@/utils/dateUtil';
   import { getpublicPoolCustomers } from '@/api/customerPool';
   import SearchForm from './components/SearchForm.vue';
-  //   import { NButton } from 'naive-ui';
+  import { DataTableRowKey } from 'naive-ui';
 
   const columns = [
     {
+      type: 'selection',
+    },
+    {
       title: '序号',
-      width: 60,
+      width: 100,
       key: 'index',
     },
     {
@@ -44,26 +56,26 @@
     },
   ];
 
+  const checkedRowKeysRef = ref<DataTableRowKey[]>([]);
+  function handleCheck(rowKeys: DataTableRowKey[]) {
+    console.log(rowKeys);
+
+    checkedRowKeysRef.value = rowKeys;
+  }
+
   //   const rejectModal = ref();
   //   const showRejectModal = (row) => {
   //     rejectModal.value.show(row.auditRecordId, row.customerName);
   //   };
 
   const searchFormRef = ref();
-  console.log(searchFormRef.value);
-
-  //   const searchParams = searchFormRef.value.searchParams;
-  const searchParams = {
-    areaId: '',
-    industry: '',
-    timerange: [Date.now() - 86400000 * 7, Date.now()],
-  };
   const loadDataTable = async (params) => {
+    const searchParams = searchFormRef.value.searchParams;
     const res = await getpublicPoolCustomers({
       areaId: searchParams.areaId,
       industry: searchParams.industry,
-      startTime: searchParams.timerange[0],
-      endTime: searchParams.timerange[1],
+      //   startTime: searchParams.timerange[0],
+      //   endTime: searchParams.timerange[1],
       ...params,
     });
     res.records = res.records.map((item, index) => {
