@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { store } from '@/store';
-import { ACCESS_TOKEN, CURRENT_USER, IS_LOCKSCREEN } from '@/store/mutation-types';
+import { ACCESS_TOKEN, CURRENT_USER, IS_LOCKSCREEN, HOME_PATH } from '@/store/mutation-types';
 
 import { login, logout } from '@/api/auth';
 import { getUserDetail, getUserList } from '@/api/user';
@@ -9,6 +9,7 @@ import { storage } from '@/utils/Storage';
 export interface IUserState {
   token: string;
   username: string;
+  homepage: string;
   permissions: any[];
   info: any;
 }
@@ -18,6 +19,7 @@ export const useUserStore = defineStore({
   state: (): IUserState => ({
     token: storage.get(ACCESS_TOKEN, ''),
     username: '',
+    homepage: storage.get(HOME_PATH, ''),
     permissions: [],
     info: storage.get(CURRENT_USER, {}),
   }),
@@ -38,6 +40,9 @@ export const useUserStore = defineStore({
   actions: {
     setToken(token: string) {
       this.token = token;
+    },
+    setHomepage(homepage: string) {
+      this.homepage = homepage;
     },
     setPermissions(permissions) {
       this.permissions = permissions;
@@ -91,6 +96,7 @@ export const useUserStore = defineStore({
       this.setUserInfo({});
       storage.removeCookie('token');
       storage.remove(ACCESS_TOKEN);
+      storage.remove(HOME_PATH);
       storage.remove(CURRENT_USER);
       return Promise.resolve('');
     },

@@ -18,7 +18,7 @@ export function createRouterGuards(router: Router) {
     const Loading = window['$loading'] || null;
     Loading && Loading.start();
     if (from.path === LOGIN_PATH && to.name === 'errorPage') {
-      next(PageEnum.BASE_HOME);
+      next(userStore.homepage);
       return;
     }
     // Whitelist can be directly entered
@@ -38,17 +38,22 @@ export function createRouterGuards(router: Router) {
         path: LOGIN_PATH,
         replace: true,
       };
-      if (to.path) {
-        redirectData.query = {
-          ...redirectData.query,
-          redirect: to.path,
-        };
-      }
+      //   if (to.path) {
+      //     redirectData.query = {
+      //       ...redirectData.query,
+      //       redirect: to.path,
+      //     };
+      //   }
       next(redirectData);
       return;
     }
+
     if (asyncRouteStore.getIsDynamicAddedRoute) {
-      next();
+      if (to.name === 'Root') {
+        next(userStore.homepage);
+      } else {
+        next();
+      }
       return;
     }
 
@@ -71,7 +76,11 @@ export function createRouterGuards(router: Router) {
     const redirect = decodeURIComponent(redirectPath);
     const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect };
     asyncRouteStore.setDynamicAddedRoute(true);
-    next(nextData);
+    if (to.name === 'Root') {
+      next(userStore.homepage);
+    } else {
+      next(nextData);
+    }
     Loading && Loading.finish();
   });
 

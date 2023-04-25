@@ -64,7 +64,7 @@
 
 <script lang="ts" setup>
   import { reactive, ref, onMounted } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
+  import { useRouter } from 'vue-router';
   import md5 from 'md5';
   import { useUserStore } from '@/store/modules/user';
   import { useMessage } from 'naive-ui';
@@ -72,7 +72,7 @@
   import { LockClosedOutline, PersonOutline } from '@vicons/ionicons5';
   import { websiteConfig } from '@/config/website.config';
   import { storage } from '@/utils/Storage';
-  import { TABS_ROUTES } from '@/store/mutation-types';
+  import { TABS_ROUTES, HOME_PATH } from '@/store/mutation-types';
   import { useGlobSetting } from '@/hooks/setting';
 
   interface FormState {
@@ -84,7 +84,6 @@
   const formRef = ref();
   const message = useMessage();
   const loading = ref(false);
-  const LOGIN_NAME = PageEnum.BASE_LOGIN_NAME;
 
   onMounted(() => {
     usernameRef.value.focus();
@@ -109,7 +108,7 @@
   const userStore = useUserStore();
 
   const router = useRouter();
-  const route = useRoute();
+  //   const route = useRoute();
   const refreshCaptach = () => {
     formInline.captchaUrl = `${urlPrefix}/sys/captcha?t=${Date.now()}`;
   };
@@ -131,7 +130,6 @@
         };
         try {
           const userInfo = await userStore.login(params);
-          console.log(userInfo);
 
           message.destroyAll();
           storage.remove(TABS_ROUTES);
@@ -155,10 +153,12 @@
               roles: ['400'],
             },
           ];
-          const homepage = roleHomes.find((item) => item.roles.includes(userInfo.roleId));
-          console.log(PageEnum[homepage]);
-
-          router.replace(PageEnum[homepage.path]);
+          const home = roleHomes.find((item) => item.roles.includes(userInfo.roleId));
+          console.log(PageEnum[home]);
+          const homepath = PageEnum[home?.path];
+          userStore.setHomepage(homepath);
+          storage.set(HOME_PATH, homepath);
+          router.replace(homepath);
         } catch (error) {
           refreshCaptach();
         } finally {
