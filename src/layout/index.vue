@@ -60,6 +60,9 @@
         <n-back-top :right="100" />
       </n-layout>
     </n-layout>
+    <n-layout-footer :inverted="getHeaderInverted" :position="fixedHeader">
+      <PageFooter v-model:collapsed="collapsed" />
+    </n-layout-footer>
   </n-layout>
 </template>
 
@@ -69,6 +72,7 @@
   import { MainView } from './components/Main';
   import { AsideMenu } from './components/Menu';
   import { PageHeader } from './components/Header';
+  import { PageFooter } from './components/Footer';
   import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
   import { useLoadingBar } from 'naive-ui';
