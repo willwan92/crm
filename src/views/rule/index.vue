@@ -17,8 +17,8 @@
       <n-form-item label="单次申请至个人公海池客户数上限" path="applyPoolCount">
         <n-input-number v-model:value="formParams.applyPoolCount" :show-button="false" />
       </n-form-item>
-      <n-form-item label="个人E级客户数上限" path="ecustomerCount">
-        <n-input-number v-model:value="formParams.ecustomerCount" :show-button="false" />
+      <n-form-item label="个人E级客户数上限" path="eCustomerCount">
+        <n-input-number v-model:value="formParams.eCustomerCount" :show-button="false" />
       </n-form-item>
       <n-form-item label="个人D、C、B和A级客户数上限" path="dcbaCustomerCount">
         <n-input-number v-model:value="formParams.dcbaCustomerCount" :show-button="false" />
@@ -71,7 +71,7 @@
   let formParams = reactive({
     accountPoolCount: 10,
     applyPoolCount: 10,
-    ecustomerCount: 10,
+    eCustomerCount: 10,
     dcbaCustomerCount: 10,
   });
 
@@ -112,7 +112,7 @@
       trigger: ['blur', 'input'],
       message: '请输入正整数',
     },
-    ecustomerCount: {
+    eCustomerCount: {
       required: true,
       type: 'integer',
       min: 1,
