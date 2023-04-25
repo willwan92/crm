@@ -4,19 +4,12 @@
       <img src="~@/assets/images/exception/404.svg" alt="" />
     </div>
     <div class="text-center">
-      <h1 class="text-base text-gray-500">抱歉，你访问的页面不存在</h1>
-      <n-button type="info" @click="goHome">回到首页</n-button>
+      <h1 class="text-base text-gray-500">抱歉，访问的页面不存在，或你没有该页面权限</h1>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup>
-  import { useRouter } from 'vue-router';
-  const router = useRouter();
-  function goHome() {
-    router.push('/');
-  }
-</script>
+<script lang="ts" setup></script>
 
 <style lang="less" scoped>
   .page-container {
