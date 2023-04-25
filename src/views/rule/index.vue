@@ -20,8 +20,8 @@
       <n-form-item label="个人E级客户数上限" path="edCustomerCount">
         <n-input-number v-model:value="formParams.ecustomerCount" :show-button="false" />
       </n-form-item>
-      <n-form-item label="个人D、C、B和A级客户数上限" path="dcbaoCustomerCount">
-        <n-input-number v-model:value="formParams.dcbaoCustomerCount" :show-button="false" />
+      <n-form-item label="个人D、C、B和A级客户数上限" path="dcbaCustomerCount">
+        <n-input-number v-model:value="formParams.dcbaCustomerCount" :show-button="false" />
       </n-form-item>
       <n-form-item label=" ">
         <n-button type="info" :loading="isConfirming" @click="handleConfirmClick"
@@ -72,7 +72,7 @@
     accountPoolCount: 50,
     applyPoolCount: 50,
     ecustomerCount: 50,
-    dcbaoCustomerCount: 50,
+    dcbaCustomerCount: 50,
   });
 
   let poolForm = reactive({
@@ -119,7 +119,7 @@
       trigger: ['blur', 'input'],
       message: '请输入正整数',
     },
-    dcbaoCustomerCount: {
+    dcbaCustomerCount: {
       required: true,
       type: 'integer',
       min: 1,
