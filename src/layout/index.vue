@@ -1,69 +1,89 @@
 <template>
-  <n-layout style="height:100vh">
-    <n-layout-header :inverted="getHeaderInverted" :position="fixedHeader">
-      <PageHeader v-model:collapsed="collapsed" :inverted="inverted" />
-    </n-layout-header>
-    <n-layout class="layout" position="absolute" style="top: 64px;height:calc(100vh - 64px)" has-sider>
-      <n-layout-sider
-        v-if="
-          !isMobile && isMixMenuNoneSub && (navMode === 'vertical' || navMode === 'horizontal-mix')
-        "
-        show-trigger="bar"
-        @collapse="collapsed = true"
-        :position="fixedMenu"
-        @expand="collapsed = false"
-        :collapsed="collapsed"
-        collapse-mode="width"
-        :collapsed-width="64"
-        :width="leftMenuWidth"
-        :native-scrollbar="false"
-        :inverted="inverted"
-        class="layout-sider"
+  <n-watermark
+    :content="`佳海集团_${accountName}_${date}`"
+    cross
+    selectable
+    :font-size="16"
+    :line-height="16"
+    :width="384"
+    :height="384"
+    :x-offset="12"
+    :y-offset="60"
+    :rotate="-15"
+  >
+    <n-layout style="height: 100vh">
+      <n-layout-header :inverted="getHeaderInverted" :position="fixedHeader">
+        <PageHeader v-model:collapsed="collapsed" :inverted="inverted" />
+      </n-layout-header>
+      <n-layout
+        class="layout"
+        position="absolute"
+        style="top: 64px; height: calc(100vh - 64px)"
+        has-sider
       >
-        <AsideMenu v-model:collapsed="collapsed" v-model:location="getMenuLocation" />
-      </n-layout-sider>
-
-      <n-drawer
-        v-model:show="showSideDrawder"
-        :width="menuWidth"
-        :placement="'left'"
-        class="layout-side-drawer"
-      >
-        <AsideMenu @clickMenuItem="collapsed = false" />
-      </n-drawer>
-
-      <n-layout :inverted="inverted">
-        <n-layout-content
-          class="layout-content"
-          :class="{ 'layout-default-background': getDarkTheme === false }"
+        <n-layout-sider
+          v-if="
+            !isMobile &&
+            isMixMenuNoneSub &&
+            (navMode === 'vertical' || navMode === 'horizontal-mix')
+          "
+          show-trigger="bar"
+          @collapse="collapsed = true"
+          :position="fixedMenu"
+          @expand="collapsed = false"
+          :collapsed="collapsed"
+          collapse-mode="width"
+          :collapsed-width="64"
+          :width="leftMenuWidth"
+          :native-scrollbar="false"
+          :inverted="inverted"
+          class="layout-sider"
         >
-          <div
-            class="layout-content-main"
-            :class="{
-              'layout-content-main-fix': fixedMulti,
-              'fluid-header': fixedHeader === 'static',
-            }"
+          <AsideMenu v-model:collapsed="collapsed" v-model:location="getMenuLocation" />
+        </n-layout-sider>
+
+        <n-drawer
+          v-model:show="showSideDrawder"
+          :width="menuWidth"
+          :placement="'left'"
+          class="layout-side-drawer"
+        >
+          <AsideMenu @clickMenuItem="collapsed = false" />
+        </n-drawer>
+
+        <n-layout :inverted="inverted">
+          <n-layout-content
+            class="layout-content"
+            :class="{ 'layout-default-background': getDarkTheme === false }"
           >
-            <TabsView v-if="isMultiTabs" v-model:collapsed="collapsed" />
             <div
-              class="main-view"
+              class="layout-content-main"
               :class="{
-                'main-view-fix': fixedMulti,
-                noMultiTabs: !isMultiTabs,
-                'mt-3': !isMultiTabs,
+                'layout-content-main-fix': fixedMulti,
+                'fluid-header': fixedHeader === 'static',
               }"
             >
-              <MainView />
+              <TabsView v-if="isMultiTabs" v-model:collapsed="collapsed" />
+              <div
+                class="main-view"
+                :class="{
+                  'main-view-fix': fixedMulti,
+                  noMultiTabs: !isMultiTabs,
+                  'mt-3': !isMultiTabs,
+                }"
+              >
+                <MainView />
+              </div>
             </div>
-          </div>
-        </n-layout-content>
-        <n-back-top :right="100" />
+          </n-layout-content>
+          <n-back-top :right="100" />
+        </n-layout>
       </n-layout>
+      <n-layout-footer :inverted="getHeaderInverted" :position="fixedHeader">
+        <PageFooter v-model:collapsed="collapsed" />
+      </n-layout-footer>
     </n-layout>
-    <n-layout-footer :inverted="getHeaderInverted" :position="fixedHeader">
-      <PageFooter v-model:collapsed="collapsed" />
-    </n-layout-footer>
-  </n-layout>
+  </n-watermark>
 </template>
 
 <script lang="ts" setup>
@@ -77,6 +97,8 @@
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
   import { useLoadingBar } from 'naive-ui';
   import { useRoute } from 'vue-router';
+  import { formatToDate } from '@/utils/dateUtil';
+  import { useUserStore } from '@/store/modules/user';
   import { useProjectSettingStore } from '@/store/modules/projectSetting';
 
   const { getDarkTheme } = useDesignSetting();
@@ -88,6 +110,10 @@
     getMenuSetting,
     getMultiTabsSetting,
   } = useProjectSetting();
+
+  const userStore = useUserStore();
+  const { accountName } = userStore?.info || {};
+  const date = formatToDate(Date.now());
 
   const settingStore = useProjectSettingStore();
 
@@ -238,7 +264,7 @@
 
     .layout-content {
       flex: auto;
-      min-height:calc(100vh - 64px);
+      min-height: calc(100vh - 64px);
     }
 
     .n-layout-header.n-layout-header--absolute-positioned {
