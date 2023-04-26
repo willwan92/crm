@@ -73,7 +73,7 @@
       <n-descriptions-item label="合作人">
         {{ baseInfo.createBy }}
       </n-descriptions-item>
-      <n-descriptions-item label="我的业绩分成">
+      <n-descriptions-item label="合作人业绩分成">
         {{ baseInfo.division }}
       </n-descriptions-item>
     </n-descriptions>
