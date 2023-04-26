@@ -54,12 +54,10 @@
     {
       title: '客户编号',
       key: 'customerCode',
-      width: '150',
     },
     {
       title: '客户名称',
       key: 'customerName',
-      width: 200,
       render(row) {
         return h(
           NButton,
@@ -73,6 +71,10 @@
           { default: () => row.customerName }
         );
       },
+    },
+    {
+      title: '客户类型',
+      key: 'isCooperated',
     },
     {
       title: '客户等级',
@@ -97,6 +99,10 @@
     {
       title: '最新跟进日期',
       key: 'followUpTime',
+    },
+    {
+      title: '预计掉公海日期',
+      key: 'gotoPublicPoolDate',
     },
   ];
 
@@ -212,8 +218,8 @@
       positiveText: '确定',
       negativeText: '取消',
       onPositiveClick: async () => {
-        await throwCustomer(row.id);
-        message.success(`客户 ${row.customerName} 已抛入公海`);
+        const res = await throwCustomer(row.id);
+        message.success(`客户 ${row.customerName} ${res}`);
         reloadTable();
       },
     });
@@ -251,6 +257,8 @@
       item.index = (res.current - 1) * res.size + index + 1;
       item.createTime = formatToDate(item.createTime);
       item.followUpTime = formatToDate(item.followUpTime);
+      item.isCooperated = item.isCooperated ? '合作客户' : '自有客户';
+
       return item;
     });
 

@@ -68,6 +68,17 @@
     </n-spin>
   </n-card>
 
+  <n-card v-if="baseInfo.isCooperated" title="客户合作信息" class="card">
+    <n-descriptions label-placement="left" bordered>
+      <n-descriptions-item label="合作人">
+        {{ baseInfo.createBy }}
+      </n-descriptions-item>
+      <n-descriptions-item label="我的业绩分成">
+        {{ baseInfo.division }}
+      </n-descriptions-item>
+    </n-descriptions>
+  </n-card>
+
   <n-card title="客户升级信息" class="card">
     <n-spin :show="loading">
       <n-descriptions
