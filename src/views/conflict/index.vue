@@ -20,12 +20,16 @@
       key: 'customerName',
     },
     {
+      title: '所在项目',
+      key: 'accountResourceName',
+    },
+    {
       title: '被撞单人',
       key: 'sourceAccountName',
     },
     {
-      title: '所在项目',
-      key: 'accountResourceName',
+      title: '被撞人职位',
+      key: 'sourceAccountPosition',
     },
     {
       title: '撞单时间',
