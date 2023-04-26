@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref, defineExpose, defineEmits } from 'vue';
+  import { reactive, ref, unref, defineExpose } from 'vue';
   import { FormRules } from 'naive-ui';
   import { getResourceList } from '@/api/project';
   import { getProjectAccountList, cooperate } from '@/api/cooperate';
@@ -239,7 +239,7 @@
 
       cooperate(formParams)
         .then(() => {
-          message.success(`客户 ${formParams.cooperateAccountName} 合作成功`);
+          message.success(`客户 ${customerName.value} 合作成功`);
           emit('ok');
           modalVisible.value = false;
         })
@@ -252,8 +252,8 @@
   const modalVisible = ref(false);
   const show = async (row) => {
     customerName.value = row.customerName;
+    formParams = Object.assign(unref(formParams), defaultParams());
     formParams.customerId = row.id;
-    console.log(row);
 
     formRef.value?.restoreValidation();
     modalVisible.value = true;

@@ -39,8 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { unref, reactive, defineEmits, defineExpose } from 'vue';
-  import { QueryUserReq } from '@/api/models/user';
+  import { unref, reactive, defineExpose } from 'vue';
 
   const levelOptions = [
     {
@@ -86,7 +85,7 @@
     customerLevel: null,
   });
 
-  let searchParams = reactive<QueryUserReq>(defaultParams());
+  let searchParams = reactive(defaultParams());
 
   defineExpose({
     searchParams,
