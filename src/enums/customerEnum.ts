@@ -89,6 +89,9 @@ export const customerSourceOptions = [
   {
     label: '渠道',
   },
+  {
+    label: '其他',
+  },
 ];
 
 export const unitOptions = [

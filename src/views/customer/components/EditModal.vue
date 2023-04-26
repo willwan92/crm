@@ -367,9 +367,9 @@
       getDetail(id).then((res) => {
         Object.assign(unref(formParams), res.baseInfoDTO);
         formParams.areaId = '1';
-        const registerCapital = formParams.registerCapital.split(' ');
+        const registerCapital = formParams.registerCapital.split('万');
         formParams.registerCapital = registerCapital[0];
-        monetaryUnit.value = registerCapital[1];
+        monetaryUnit.value = `万${registerCapital[1]}`;
 
         const spaceCondition = formParams.spaceCondition.split(' ');
         formParams.spaceCondition = spaceCondition[1];
@@ -390,10 +390,11 @@
         return;
       }
       isConfirming.value = true;
-      formParams.registerCapital += `${monetaryUnit.value}`;
-      formParams.spaceCondition = `${spaceConditionType.value} ${formParams.spaceCondition}`;
       if (!customerId.value) {
-        add(formParams)
+        const params = Object.assign({}, formParams);
+        params.registerCapital += `${monetaryUnit.value}`;
+        params.spaceCondition = `${spaceConditionType.value} ${formParams.spaceCondition}`;
+        add(params)
           .then(() => {
             modalVisible.value = false;
             emit('ok');
@@ -408,7 +409,7 @@
           mainProduct: formParams.mainProduct,
           rentType: formParams.rentType,
           requireArea: formParams.requireArea,
-          spaceCondition: formParams.spaceCondition,
+          spaceCondition: `${spaceConditionType.value} ${formParams.spaceCondition}`,
           unitType: formParams.unitType,
         };
 
