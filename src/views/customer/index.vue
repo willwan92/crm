@@ -159,7 +159,8 @@
             },
             { default: () => '降级' }
           ),
-        row.customerLevel >= 'C' &&
+        row.isCooperated === '自有客户' &&
+          row.customerLevel < 'E' &&
           h(
             NButton,
             {
