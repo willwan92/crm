@@ -8,9 +8,9 @@ export const basicProps = {
     type: String,
     default: null,
   },
-  toolbarShow:{
-    type:Boolean,
-    default:true
+  toolbarShow: {
+    type: Boolean,
+    default: true,
   },
   titleTooltip: {
     type: String,
@@ -58,6 +58,7 @@ export const basicProps = {
     type: Object as PropType<BasicColumn>,
     default: null,
   },
-  canResize: propTypes.bool.def(true),
+  //是否根据客户端高度设置表格最大高度
+  canResize: propTypes.bool.def(false),
   resizeHeightOffset: propTypes.number.def(0),
 };
