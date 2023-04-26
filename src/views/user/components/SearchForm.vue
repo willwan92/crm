@@ -18,7 +18,18 @@
         clearable
         :options="statusOptions"
         style="width: 120px"
-        placeholder="全部" 
+        placeholder="全部"
+      />
+    </n-form-item>
+    <n-form-item label="所属项目" path="areaId">
+      <n-cascader
+        remote
+        clearable
+        check-strategy="child"
+        v-model:value="searchParams.projectId"
+        style="width: 200px"
+        :options="projectOptions"
+        :on-load="handleProjectLoad"
       />
     </n-form-item>
     <n-space>
@@ -29,38 +40,87 @@
 </template>
 
 <script lang="ts" setup>
-import { unref, reactive, defineEmits, defineExpose } from 'vue';
-import { QueryUserReq } from '@/api/models/user';
+  import { CascaderOption } from 'naive-ui';
+  import { ref, unref, reactive, defineExpose } from 'vue';
+  import { getResourceList } from '@/api/project';
 
-const statusOptions = [
-  {
-    value: 0,
-    label: '启用',
-  },
-  {
-    value: 1,
-    label: '禁用',
-  },
-];
+  const statusOptions = [
+    {
+      value: 0,
+      label: '启用',
+    },
+    {
+      value: 1,
+      label: '禁用',
+    },
+  ];
 
-const defaultParams = () => ({
-  keyName: '',
-  status: null,
-});
+  const projectOptions = ref([]);
+  getResourceList({
+    resourceType: 'AREA',
+    size: 9999,
+    current: 1,
+  }).then((res) => {
+    projectOptions.value = res.records.map((item) => {
+      const area = {
+        value: item.resourceId,
+        label: item.resourceName,
+        depth: 0,
+        isLeaf: false,
+      };
+      return area;
+    });
+  });
 
-let  searchParams = reactive<QueryUserReq>(defaultParams());
+  const resourceTypes = [
+    {
+      type: 'CITY',
+      pid: 'areaId',
+    },
+    {
+      type: 'PROJECT',
+      pid: 'cityId',
+    },
+  ];
+  function handleProjectLoad(option: CascaderOption) {
+    const resourceType = resourceTypes[(option as { depth: number }).depth].type;
+    const params = {
+      resourceType,
+      size: 9999,
+      current: 1,
+    };
+    params[resourceTypes[(option as { depth: number }).depth].pid] = option.value;
+    return getResourceList(params).then((res) => {
+      option.children = res.records.map((item) => {
+        return {
+          label: item.resourceName,
+          value: item.resourceId + '',
+          depth: (option as { depth: number }).depth + 1,
+          isLeaf: option.depth === 1,
+        };
+      });
+    });
+  }
 
-defineExpose({
-  searchParams,
-});
+  const defaultParams = () => ({
+    keyName: '',
+    projectId: '',
+    status: null,
+  });
 
-function resetParams() {
-  searchParams = Object.assign(unref(searchParams), defaultParams());
-  emitReloadTable();
-}
+  let searchParams = reactive(defaultParams());
 
-const emit = defineEmits(['reloadTable']);
-const emitReloadTable = () => {
-  emit('reloadTable');
-};
+  defineExpose({
+    searchParams,
+  });
+
+  function resetParams() {
+    searchParams = Object.assign(unref(searchParams), defaultParams());
+    emitReloadTable();
+  }
+
+  const emit = defineEmits(['reloadTable']);
+  const emitReloadTable = () => {
+    emit('reloadTable');
+  };
 </script>
