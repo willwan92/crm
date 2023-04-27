@@ -10,11 +10,20 @@
     </template>
     <n-spin :show="loading">
       <n-descriptions label-placement="left" bordered>
+        <n-descriptions-item label="客户名称">
+          {{ baseInfo.customerName }}
+        </n-descriptions-item>
+        <n-descriptions-item label="客户级别">
+          {{ baseInfo.customerLevel }}
+        </n-descriptions-item>
+        <n-descriptions-item label="客户编号">
+          {{ baseInfo.customerCode }}
+        </n-descriptions-item>
         <n-descriptions-item label="招商项目">
           {{ baseInfo.accountResourceName }}
         </n-descriptions-item>
-        <n-descriptions-item label="客户名称">
-          {{ baseInfo.customerName }}
+        <n-descriptions-item label="客户所属人">
+          {{ baseInfo.sourceAccountName }}
         </n-descriptions-item>
         <n-descriptions-item label="客户来源">
           {{ baseInfo.customerSource }}
