@@ -21,7 +21,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Layout,
     meta: {
       sort: 7,
-      permissions: ['100'],
+      permissions: ['200', '100'],
       activeMenu: 'rule_index',
       icon: renderIcon(SettingOutlined),
     },
@@ -31,7 +31,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'rule_index',
         meta: {
           title: '规则设置',
-          permissions: ['100'],
+          permissions: ['200', '100'],
           activeMenu: 'rule_index',
         },
         component: () => import('@/views/rule/index.vue'),

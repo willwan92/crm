@@ -22,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       sort: 6,
       isRoot: true,
-      permissions: ['400', '300', '100'],
+      permissions: ['400', '300', '200', '100'],
       activeMenu: 'customerPool_index',
       icon: renderIcon(PublicOutlined),
     },
@@ -32,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
         name: `customerPool_index`,
         meta: {
           title: '公海池',
-          permissions: ['400', '300', '100'],
+          permissions: ['400', '300', '200', '100'],
           activeMenu: 'customerPool_index',
         },
         component: () => import('@/views/customerPool/index.vue'),

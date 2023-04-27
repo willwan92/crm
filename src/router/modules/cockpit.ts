@@ -22,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       sort: -1,
       isRoot: true,
-      permissions: ['500', '200', '100'],
+      permissions: ['200', '100'],
       activeMenu: 'cockpit_index',
       icon: renderIcon(SpaceDashboardOutlined),
     },
@@ -32,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'cockpit_index',
         meta: {
           title: '驾驶舱',
-          permissions: ['500', '200', '100'],
+          permissions: ['200', '100'],
           activeMenu: 'cockpit_index',
         },
         component: () => import('@/views/cockpit/index.vue'),
