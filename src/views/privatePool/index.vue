@@ -106,10 +106,10 @@
       positiveText: '确定',
       negativeText: '取消',
       onPositiveClick: async () => {
-        await throwBackPublicCustomers({
+        const res = await throwBackPublicCustomers({
           poolRecordId: row.id,
         });
-        message.success(`客户 ${row.customerName} 已抛回公海`);
+        message.success(`客户 ${row.customerName} ${res}`);
         reloadTable();
       },
     });
