@@ -83,8 +83,8 @@
     const res = await getpublicPoolCustomers({
       areaId: searchParams.areaId,
       industry: searchParams.industry,
-      //   startTime: searchParams.timerange[0],
-      //   endTime: searchParams.timerange[1],
+      startTime: searchParams.timerange && searchParams.timerange[0],
+      endTime: searchParams.timerange && searchParams.timerange[1],
       ...params,
     });
     res.records = res.records.map((item, index) => {

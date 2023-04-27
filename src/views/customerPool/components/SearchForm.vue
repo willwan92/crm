@@ -28,7 +28,7 @@
       />
     </n-form-item>
     <n-form-item label="掉公海时间" path="timerange">
-      <n-date-picker v-model:value="searchParams.timerange" type="datetimerange" />
+      <n-date-picker v-model:value="searchParams.timerange" type="datetimerange" clearable />
     </n-form-item>
     <n-space>
       <n-button type="info" @click="emitReloadTable"> 查询 </n-button>
@@ -41,7 +41,7 @@
   import * as provinceApi from '@/api/province';
   import { CascaderOption } from 'naive-ui';
   import { industryOptions } from '@/enums/customerEnum';
-  import { unref, reactive, ref, defineExpose } from 'vue';
+  import { unref, reactive, ref } from 'vue';
 
   const addrOptions = ref([]);
   provinceApi.getProvinceList().then((res) => {
@@ -70,17 +70,19 @@
     });
   }
 
-  const defaultParams = () => ({
+  interface Req {
+    areaId: string;
+    industry: string;
+    timerange: [number, number] | null;
+  }
+
+  const defaultParams = (): Req => ({
     areaId: '',
     industry: '',
-    timerange: [Date.now() - 86400000 * 7, Date.now()],
+    timerange: null,
   });
 
-  let searchParams = reactive(defaultParams());
-
-  defineExpose({
-    searchParams,
-  });
+  let searchParams = reactive<Req>(defaultParams());
 
   function resetParams() {
     searchParams = Object.assign(unref(searchParams), defaultParams());
@@ -91,4 +93,8 @@
   const emitReloadTable = () => {
     emit('reloadTable');
   };
+
+  defineExpose({
+    searchParams,
+  });
 </script>
