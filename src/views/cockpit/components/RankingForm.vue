@@ -28,6 +28,7 @@
 </template>
 
 <script lang="ts" setup>
+  import { subMonths, startOfDay, endOfDay } from 'date-fns';
   import { unref, reactive, defineExpose } from 'vue';
 
   const levelOptions = [
@@ -55,7 +56,7 @@
 
   const defaultParams = () => ({
     customerLevel: undefined,
-    timerange: [Date.now() - 86400000 * 30, Date.now()],
+    timerange: [startOfDay(subMonths(Date.now(), 1)).getTime(), endOfDay(Date.now()).getTime()],
   });
 
   let rankingParams = reactive(defaultParams());

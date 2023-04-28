@@ -57,6 +57,7 @@
   import { getPositionList } from '@/api/role';
   import { getResourceList } from '@/api/project';
   import { unref, reactive, ref, defineExpose } from 'vue';
+  import { subMonths, startOfDay, endOfDay } from 'date-fns';
 
   const levelOptions = [
     {
@@ -130,7 +131,7 @@
     projectId: undefined,
     positionCode: undefined,
     customerLevel: undefined,
-    timerange: [Date.now() - 86400000 * 7, Date.now()],
+    timerange: [startOfDay(subMonths(Date.now(), 1)).getTime(), endOfDay(Date.now()).getTime()],
   });
 
   let searchParams = reactive(defaultParams());
