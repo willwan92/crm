@@ -44,8 +44,7 @@
     </n-form>
     <template #action>
       <n-space>
-        <n-button type="info" @click="handleCompleteClick">完成</n-button>
-        <n-button @click="modalVisible = false">取消</n-button>
+        <n-button type="info" @click="handleCompleteClick">关闭</n-button>
       </n-space>
     </template>
   </n-modal>
