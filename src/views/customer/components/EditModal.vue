@@ -95,6 +95,16 @@
           </n-form-item>
         </n-gi>
         <n-gi>
+          <n-form-item label="租售类型" path="rentType">
+            <n-radio-group v-model:value="formParams.rentType">
+              <n-space>
+                <n-radio value="租赁">租赁</n-radio>
+                <n-radio value="销售">销售</n-radio>
+              </n-space>
+            </n-radio-group>
+          </n-form-item>
+        </n-gi>
+        <n-gi>
           <n-form-item label="组织机构代码" path="organizationCode">
             <n-input v-model:value="formParams.organizationCode" />
           </n-form-item>
@@ -162,16 +172,6 @@
                 ><template #suffix> 平米 </template></n-input
               >
             </n-input-group>
-          </n-form-item>
-        </n-gi>
-        <n-gi>
-          <n-form-item label="租售类型" path="rentType">
-            <n-radio-group v-model:value="formParams.rentType">
-              <n-space>
-                <n-radio value="租赁">租赁</n-radio>
-                <n-radio value="销售">销售</n-radio>
-              </n-space>
-            </n-radio-group>
           </n-form-item>
         </n-gi>
       </n-grid>

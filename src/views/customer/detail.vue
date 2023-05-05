@@ -10,8 +10,17 @@
     </template>
     <n-spin :show="loading">
       <n-descriptions label-placement="left" bordered>
+        <n-descriptions-item label="招商项目">
+          {{ baseInfo.accountResourceName }}
+        </n-descriptions-item>
         <n-descriptions-item label="客户名称">
           {{ baseInfo.customerName }}
+        </n-descriptions-item>
+        <n-descriptions-item label="客户来源">
+          {{ baseInfo.customerSource }}
+        </n-descriptions-item>
+        <n-descriptions-item label="客户所属人">
+          {{ baseInfo.sourceAccountName }}
         </n-descriptions-item>
         <n-descriptions-item label="客户级别">
           {{ baseInfo.customerLevel }}
@@ -19,20 +28,27 @@
         <n-descriptions-item label="客户编号">
           {{ baseInfo.customerCode }}
         </n-descriptions-item>
-        <n-descriptions-item label="招商项目">
-          {{ baseInfo.accountResourceName }}
+        <n-descriptions-item label="客户所在地区">
+          {{ baseInfo.mergerName }}
         </n-descriptions-item>
-        <n-descriptions-item label="客户所属人">
-          {{ baseInfo.sourceAccountName }}
+        <n-descriptions-item label="需求业态">
+          {{ baseInfo.unitType }}
         </n-descriptions-item>
-        <n-descriptions-item label="客户来源">
-          {{ baseInfo.customerSource }}
+        <n-descriptions-item label="需求面积">
+          {{ baseInfo.requireArea }} 平米
+        </n-descriptions-item>
+        <n-descriptions-item label="联系人"> {{ baseInfo.contactName }} </n-descriptions-item>
+        <n-descriptions-item label="联系电话">
+          {{ baseInfo.contactPhone }}
+        </n-descriptions-item>
+        <n-descriptions-item label="联系人职务">
+          {{ baseInfo.contactPosition }}
+        </n-descriptions-item>
+        <n-descriptions-item label="租售类型">
+          {{ baseInfo.rentType }}
         </n-descriptions-item>
         <n-descriptions-item label="组织机构代码">
           {{ baseInfo.organizationCode }}
-        </n-descriptions-item>
-        <n-descriptions-item label="客户所在地区">
-          {{ baseInfo.mergerName }}
         </n-descriptions-item>
         <n-descriptions-item label="注册地址">
           {{ baseInfo.registerAddress }}
@@ -47,13 +63,6 @@
         <n-descriptions-item label="关联企业">
           {{ baseInfo.relaEnterprises }}
         </n-descriptions-item>
-        <n-descriptions-item label="联系人"> {{ baseInfo.contactName }} </n-descriptions-item>
-        <n-descriptions-item label="联系人职务">
-          {{ baseInfo.contactPosition }}
-        </n-descriptions-item>
-        <n-descriptions-item label="联系电话">
-          {{ baseInfo.contactPhone }}
-        </n-descriptions-item>
 
         <n-descriptions-item label="所属行业">
           {{ baseInfo.industry }}
@@ -62,16 +71,7 @@
           {{ baseInfo.mainProduct }}
         </n-descriptions-item>
         <n-descriptions-item label="现有场地">
-          {{ baseInfo.spaceCondition }} 平米
-        </n-descriptions-item>
-        <n-descriptions-item label="租售类型">
-          {{ baseInfo.rentType }}
-        </n-descriptions-item>
-        <n-descriptions-item label="需求业态">
-          {{ baseInfo.unitType }}
-        </n-descriptions-item>
-        <n-descriptions-item label="需求面积">
-          {{ baseInfo.requireArea }} 平米
+          {{ baseInfo.spaceCondition && `${baseInfo.spaceCondition} 平米` }}
         </n-descriptions-item>
       </n-descriptions>
     </n-spin>
