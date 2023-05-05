@@ -31,3 +31,18 @@ export function setFallingRules(data) {
     data,
   });
 }
+
+export function getCustomerRules() {
+  return http.request<Result>({
+    url: '/rule/phoneView/get',
+    method: RequestEnum.GET,
+  });
+}
+
+export function setCustomerRules(params) {
+  return http.request<Result>({
+    url: '/rule/phoneView/turnSwitch',
+    method: RequestEnum.GET,
+    params,
+  });
+}
