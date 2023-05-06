@@ -95,26 +95,6 @@
           </n-form-item>
         </n-gi>
         <n-gi>
-          <n-form-item label="租售类型" path="rentType">
-            <n-radio-group v-model:value="formParams.rentType">
-              <n-space>
-                <n-radio value="租赁">租赁</n-radio>
-                <n-radio value="销售">销售</n-radio>
-              </n-space>
-            </n-radio-group>
-          </n-form-item>
-        </n-gi>
-        <n-gi>
-          <n-form-item label="组织机构代码" path="organizationCode">
-            <n-input v-model:value="formParams.organizationCode" />
-          </n-form-item>
-        </n-gi>
-        <n-gi>
-          <n-form-item label="注册地址" path="registerAddress">
-            <n-input v-model:value="formParams.registerAddress" />
-          </n-form-item>
-        </n-gi>
-        <n-gi>
           <n-form-item label="注册资本" path="registerCapital">
             <n-input-group>
               <n-input v-model:value="formParams.registerCapital" />
@@ -134,13 +114,13 @@
           </n-form-item>
         </n-gi>
         <n-gi>
-          <n-form-item label="关联企业" path="relaEnterprises">
-            <n-select
-              v-model:value="formParams.relaEnterprises"
-              label-field="label"
-              value-field="label"
-              :options="relaEnterprisesOptions"
-            />
+          <n-form-item label="注册地址" path="registerAddress">
+            <n-input v-model:value="formParams.registerAddress" />
+          </n-form-item>
+        </n-gi>
+        <n-gi>
+          <n-form-item label="主营产品" path="mainProduct">
+            <n-input v-model:value="formParams.mainProduct" />
           </n-form-item>
         </n-gi>
         <n-gi>
@@ -154,8 +134,18 @@
           </n-form-item>
         </n-gi>
         <n-gi>
-          <n-form-item label="主营产品" path="mainProduct">
-            <n-input v-model:value="formParams.mainProduct" />
+          <n-form-item label="关联企业" path="relaEnterprises">
+            <n-select
+              v-model:value="formParams.relaEnterprises"
+              label-field="label"
+              value-field="label"
+              :options="relaEnterprisesOptions"
+            />
+          </n-form-item>
+        </n-gi>
+        <n-gi>
+          <n-form-item label="组织机构代码" path="organizationCode">
+            <n-input v-model:value="formParams.organizationCode" />
           </n-form-item>
         </n-gi>
         <n-gi>
@@ -172,6 +162,16 @@
                 ><template #suffix> 平米 </template></n-input
               >
             </n-input-group>
+          </n-form-item>
+        </n-gi>
+        <n-gi>
+          <n-form-item label="需求类型" path="rentType">
+            <n-radio-group v-model:value="formParams.rentType">
+              <n-space>
+                <n-radio value="租赁">租赁</n-radio>
+                <n-radio value="销售">销售</n-radio>
+              </n-space>
+            </n-radio-group>
           </n-form-item>
         </n-gi>
       </n-grid>
