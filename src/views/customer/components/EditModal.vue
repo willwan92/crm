@@ -342,7 +342,7 @@
   const projectList = ref([]);
   const customerId = ref('');
   const spaceConditionType = ref('租赁');
-  const monetaryUnit = ref('元');
+  const monetaryUnit = ref('万（元）');
   const show = async (id) => {
     modalVisible.value = true;
     formRef.value?.restoreValidation();

@@ -13,8 +13,8 @@
       <n-form-item label="客户联系电话">
         <n-switch
           v-model:value="customerForm.curStatus"
-          checked-value="OPEN"
-          unchecked-value="CLOSE"
+          checked-value="CLOSE"
+          unchecked-value="OPEN"
           :loading="isSwitching"
           @update:value="handleCurStatusChange"
         >
