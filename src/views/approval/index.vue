@@ -130,10 +130,10 @@
       positiveText: '确定',
       negativeText: '取消',
       onPositiveClick: async () => {
-        await pass({
+        const res = await pass({
           auditRecordId: row.auditRecordId,
         });
-        message.success(`客户 ${row.customerName}  的 ${row.auditDesc} 申请已通过`);
+        message.success(`客户 ${row.customerName}  的 ${row.auditDesc} ${res}`);
         reloadTable();
       },
     });

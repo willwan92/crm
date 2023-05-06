@@ -104,9 +104,11 @@
 
 <script lang="ts" setup>
   import { reactive, ref, unref, defineExpose, defineEmits } from 'vue';
-  import { FormRules } from 'naive-ui';
+  import { FormRules, useMessage } from 'naive-ui';
   import { MOBILE_REGEXP, POSITIVE_FLOAT_REGEXP } from '@/enums/validatorEnum';
   import { getAuditAccountList, upgrade } from '@/api/audit';
+
+  const message = useMessage();
 
   const formRef = ref();
 
@@ -271,9 +273,10 @@
       isConfirming.value = true;
 
       upgrade(formParams)
-        .then(() => {
-          emit('ok');
+        .then((res) => {
           modalVisible.value = false;
+          message.success(res);
+          emit('ok');
         })
         .finally(() => {
           isConfirming.value = false;

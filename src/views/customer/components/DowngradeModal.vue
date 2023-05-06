@@ -43,9 +43,11 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref, defineExpose, defineEmits } from 'vue';
-  import { FormRules } from 'naive-ui';
+  import { reactive, ref } from 'vue';
+  import { FormRules, useMessage } from 'naive-ui';
   import { getAuditAccountList, downgrade } from '@/api/audit';
+
+  const message = useMessage();
 
   const formRef = ref();
 
@@ -85,7 +87,8 @@
       isConfirming.value = true;
 
       downgrade(formParams)
-        .then(() => {
+        .then((res) => {
+          message.success(res);
           emit('ok');
           modalVisible.value = false;
         })

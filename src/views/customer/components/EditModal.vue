@@ -199,9 +199,11 @@
   } from '@/enums/customerEnum';
   import { MOBILE_REGEXP, POSITIVE_INT_REGEXP } from '@/enums/validatorEnum';
   import { useUserStore } from '@/store/modules/user';
-  import { CascaderOption } from 'naive-ui';
+  import { CascaderOption, useMessage } from 'naive-ui';
   import { add, getDetail, update } from '@/api/customer';
   import * as provinceApi from '@/api/province';
+
+  const message = useMessage();
 
   const addrOptions = ref([]);
   provinceApi.getProvinceList().then((res) => {
@@ -392,8 +394,9 @@
         : '';
       if (!customerId.value) {
         add(params)
-          .then(() => {
+          .then((res) => {
             modalVisible.value = false;
+            message.success(res);
             emit('ok');
           })
           .finally(() => {
