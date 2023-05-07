@@ -104,11 +104,9 @@
 
 <script lang="ts" setup>
   import { reactive, ref, unref, defineExpose, defineEmits } from 'vue';
-  import { FormRules, useMessage } from 'naive-ui';
+  import { FormRules } from 'naive-ui';
   import { MOBILE_REGEXP, POSITIVE_FLOAT_REGEXP } from '@/enums/validatorEnum';
   import { getAuditAccountList, upgrade } from '@/api/audit';
-
-  const message = useMessage();
 
   const formRef = ref();
 
@@ -254,15 +252,7 @@
   let formParams = reactive(defaultParams());
 
   const isConfirming = ref(false);
-  let rules = reactive<FormRules>({
-    approveAccountId: [
-      {
-        required: true,
-        trigger: ['blur'],
-        message: '请选择审批人',
-      },
-    ],
-  });
+  let rules = reactive<FormRules>({});
 
   const emit = defineEmits(['ok']);
   const handleConfirmClick = () => {
@@ -273,9 +263,8 @@
       isConfirming.value = true;
 
       upgrade(formParams)
-        .then((res) => {
+        .then(() => {
           modalVisible.value = false;
-          message.success(res);
           emit('ok');
         })
         .finally(() => {
@@ -292,7 +281,18 @@
     formParams = Object.assign(unref(formParams), defaultParams());
     formParams.customerId = row.id;
     formRef.value?.restoreValidation();
-    rules = Object.assign(rules, upgradeMap[currentLevel.value].rules);
+    rules = Object.assign(
+      {
+        approveAccountId: [
+          {
+            required: true,
+            trigger: ['blur'],
+            message: '请选择审批人',
+          },
+        ],
+      },
+      upgradeMap[currentLevel.value].rules
+    );
     modalVisible.value = true;
 
     getAuditAccountList(row.id, row.accountResourceId, 'UP').then((res) => {

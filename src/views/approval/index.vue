@@ -157,7 +157,7 @@
         const res = await pass({
           auditRecordId: row.auditRecordId,
         });
-        message.success(`客户 ${row.customerName}  的 ${row.auditDesc} ${res}`);
+        message.success(res);
         reloadTable();
       },
     });

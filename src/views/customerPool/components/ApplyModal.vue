@@ -100,8 +100,8 @@
       isConfirming.value = true;
 
       applyPublicCustomers(formParams)
-        .then((res) => {
-          message.success(res);
+        .then(() => {
+          message.success('客户申请已发出');
           emit('ok');
           modalVisible.value = false;
         })
