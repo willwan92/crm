@@ -10,6 +10,23 @@ export function getResourceList(params) {
   });
 }
 
+export function getCitiesByCurrentUser() {
+  return http.request<Result>({
+    url: '/resource/cityListByCurrentUser',
+    method: RequestEnum.GET,
+  });
+}
+
+export function getProjectsByCurrentUser(cityId: string) {
+  return http.request<Result>({
+    url: '/resource/projectListByCurrentUser',
+    method: RequestEnum.GET,
+    params: {
+      cityId,
+    },
+  });
+}
+
 export function addResource(data) {
   return http.request<Result>({
     url: '/resource/add',

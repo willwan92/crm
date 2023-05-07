@@ -55,8 +55,8 @@
 
 <script lang="ts" setup>
   import { getPositionList } from '@/api/role';
-  import { getResourceList } from '@/api/project';
-  import { unref, reactive, ref, defineExpose } from 'vue';
+  import { getCitiesByCurrentUser, getProjectsByCurrentUser } from '@/api/project';
+  import { unref, reactive, ref, defineExpose, watch } from 'vue';
   import { subMonths, startOfDay, endOfDay } from 'date-fns';
 
   const levelOptions = [
@@ -98,12 +98,8 @@
 
   const cities = ref([]);
   const getCityList = () => {
-    getResourceList({
-      resourceType: 'CITY',
-      size: 9999,
-      current: 1,
-    }).then((res) => {
-      cities.value = res.records.map((city) => ({
+    getCitiesByCurrentUser().then((res) => {
+      cities.value = res.map((city) => ({
         value: city.resourceId,
         label: city.resourceName,
       }));
@@ -112,29 +108,36 @@
   getCityList();
 
   const projects = ref([]);
-  const getProjects = () => {
-    getResourceList({
-      resourceType: 'PROJECT',
-      size: 9999999,
-      current: 1,
-    }).then((res) => {
-      projects.value = res.records.map((city) => ({
+  const getProjects = (cityId: string) => {
+    getProjectsByCurrentUser(cityId).then((res) => {
+      projects.value = res.map((city) => ({
         value: city.resourceId,
         label: city.resourceName,
       }));
     });
   };
-  getProjects();
 
   const defaultParams = () => ({
-    cityId: undefined,
-    projectId: undefined,
-    positionCode: undefined,
-    customerLevel: undefined,
+    cityId: null,
+    projectId: null,
+    positionCode: null,
+    customerLevel: null,
     timerange: [startOfDay(subMonths(Date.now(), 1)).getTime(), endOfDay(Date.now()).getTime()],
   });
 
   let searchParams = reactive(defaultParams());
+
+  watch(
+    () => searchParams.cityId,
+    (newVal) => {
+      if (newVal) {
+        getProjects(newVal);
+      } else {
+        projects.value = [];
+      }
+      searchParams.projectId = null;
+    }
+  );
 
   defineExpose({
     searchParams,
