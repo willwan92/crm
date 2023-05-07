@@ -11,6 +11,8 @@
     />
 
     <RejectModal ref="rejectModal" @ok="reloadTable" />
+    <UpgradeModal ref="upgradeModal" />
+    <DowngradeModal ref="downgradeModal" />
   </n-card>
 </template>
 
@@ -19,6 +21,8 @@
   import { useRouter } from 'vue-router';
   import { BasicTable } from '@/components/Table';
   import { formatToDateTime } from '@/utils/dateUtil';
+  import UpgradeModal from './components/UpgradeModal.vue';
+  import DowngradeModal from './components/DowngradeModal.vue';
   import RejectModal from './components/RejectModal.vue';
   import { getAuditList, pass } from '@/api/audit';
   import SearchForm from './components/SearchForm.vue';
@@ -60,6 +64,19 @@
     {
       title: '操作类型',
       key: 'auditDesc',
+      render(row) {
+        return row.auditType === 'UP_DOWN_GRADE'
+          ? h(
+              NButton,
+              {
+                type: 'info',
+                text: true,
+                onClick: () => showDetailModal(row),
+              },
+              { default: () => row.auditDesc }
+            )
+          : row.auditDesc;
+      },
     },
     {
       title: '审批状态',
@@ -72,10 +89,6 @@
     {
       title: '发起人',
       key: 'applyAccountName',
-    },
-    {
-      title: '审批人',
-      key: 'approveAccountName',
     },
     {
       title: '申请时间',
@@ -122,6 +135,17 @@
         : `已${row.auditStatusDesc}`;
     },
   });
+
+  const upgradeModal = ref();
+  const downgradeModal = ref();
+  const showDetailModal = (row) => {
+    const upOrDown = row.upOrDown;
+    if (upOrDown === 'UP') {
+      upgradeModal.value.show(row);
+    } else if (upOrDown === 'DOWN') {
+      downgradeModal.value.show(row);
+    }
+  };
 
   function handlePassClick(row) {
     dialog.info({

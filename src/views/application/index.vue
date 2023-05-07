@@ -74,17 +74,18 @@
     align: 'center',
     render(row) {
       return [
-        h(
-          NButton,
-          {
-            size: 'small',
-            type: 'info',
-            tertiary: true,
-            style: 'margin-right:5px',
-            onClick: () => showDetailModal(row),
-          },
-          { default: () => '申请详情' }
-        ),
+        row.auditType === 'UP_DOWN_GRADE' &&
+          h(
+            NButton,
+            {
+              size: 'small',
+              type: 'info',
+              tertiary: true,
+              style: 'margin-right:5px',
+              onClick: () => showDetailModal(row),
+            },
+            { default: () => '申请详情' }
+          ),
       ];
     },
   });
