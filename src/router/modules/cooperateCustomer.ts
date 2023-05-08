@@ -22,7 +22,14 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       sort: 4,
       isRoot: true,
-      permissions: ['400', '300', '200', '100'],
+      permissions: [
+        'COMMISSIONER',
+        'MANAGER',
+        'CHIEF_INSPECTOR',
+        'CENTER_VICE_GENERAL_MANAGER',
+        'VICE_PRESIDENT',
+        'ADMIN',
+      ],
       activeMenu: 'cooperate_index',
       icon: renderIcon(ShareAltOutlined),
     },
@@ -32,7 +39,6 @@ const routes: Array<RouteRecordRaw> = [
         name: 'cooperate_index',
         meta: {
           title: '合作客户',
-          permissions: ['400', '300', '200', '100'],
           activeMenu: 'cooperate_index',
         },
         component: () => import('@/views/cooperateCustomer/index.vue'),

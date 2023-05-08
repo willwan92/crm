@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
       sort: 1,
       isRoot: true,
       activeMenu: 'user_index',
-      permissions: ['200', '100'],
+      permissions: ['CENTER_VICE_GENERAL_MANAGER', 'VICE_PRESIDENT', 'ADMIN'],
       icon: renderIcon(UserOutlined),
     },
     children: [
@@ -32,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
         name: `user_index`,
         meta: {
           title: '用户管理',
-          permissions: ['200', '100'],
+          permissions: ['CENTER_VICE_GENERAL_MANAGER', 'VICE_PRESIDENT', 'ADMIN'],
           activeMenu: 'user_index',
         },
         component: () => import('@/views/user/index.vue'),

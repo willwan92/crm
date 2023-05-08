@@ -11,7 +11,14 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       sort: 5,
       isRoot: true,
-      permissions: ['400', '300', '200', '100'],
+      permissions: [
+        'COMMISSIONER',
+        'MANAGER',
+        'CHIEF_INSPECTOR',
+        'CENTER_VICE_GENERAL_MANAGER',
+        'VICE_PRESIDENT',
+        'ADMIN',
+      ],
       activeMenu: 'application_index',
       icon: renderIcon(FileTextOutlined),
     },
@@ -21,7 +28,6 @@ const routes: Array<RouteRecordRaw> = [
         name: `application_index`,
         meta: {
           title: '申请记录',
-          permissions: ['400', '300', '200', '100'],
           activeMenu: 'application_index',
         },
         component: () => import('@/views/application/index.vue'),

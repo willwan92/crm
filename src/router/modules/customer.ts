@@ -23,7 +23,14 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       sort: 3,
       title: '我的客户',
-      permissions: ['400', '300', '200', '100'],
+      permissions: [
+        'COMMISSIONER',
+        'MANAGER',
+        'CHIEF_INSPECTOR',
+        'CENTER_VICE_GENERAL_MANAGER',
+        'VICE_PRESIDENT',
+        'ADMIN',
+      ],
       icon: renderIcon(BusinessCenterOutlined),
     },
     children: [
@@ -32,7 +39,6 @@ const routes: Array<RouteRecordRaw> = [
         name: 'customer_index',
         meta: {
           title: '我的客户',
-          permissions: ['400', '300', '200', '100'],
         },
         component: () => import('@/views/customer/index.vue'),
       },
@@ -41,7 +47,6 @@ const routes: Array<RouteRecordRaw> = [
         name: 'customer_detail',
         meta: {
           title: '客户详情',
-          permissions: ['400', '300', '200', '100'],
           hidden: true,
         },
         component: () => import('@/views/customer/detail.vue'),

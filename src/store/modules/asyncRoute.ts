@@ -101,7 +101,7 @@ export const useAsyncRouteStore = defineStore({
      */
     async generateRoutes(userInfo) {
       let accessedRoutes;
-      const permissionsList = [userInfo.roleId] || [];
+      const permissionsList = [userInfo.accountPositionCode] || [];
       const hasPermission = (route) => {
         const { meta } = route;
         const { permissions } = meta || {};

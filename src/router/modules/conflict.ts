@@ -21,7 +21,14 @@ const routes: Array<RouteRecordRaw> = [
     component: Layout,
     meta: {
       sort: 6,
-      permissions: ['400', '300', '200', , '100'],
+      permissions: [
+        'COMMISSIONER',
+        'MANAGER',
+        'CHIEF_INSPECTOR',
+        'CENTER_VICE_GENERAL_MANAGER',
+        'VICE_PRESIDENT',
+        'ADMIN',
+      ],
       activeMenu: 'conflict_index',
       icon: renderIcon(ShrinkOutlined),
     },
@@ -31,7 +38,6 @@ const routes: Array<RouteRecordRaw> = [
         name: `conflict_index`,
         meta: {
           title: '撞单记录',
-          permissions: ['400', '300', '200', , '100'],
           activeMenu: 'conflict_index',
         },
         component: () => import('@/views/conflict/index.vue'),
