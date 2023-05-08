@@ -31,6 +31,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'rule_index',
         meta: {
           title: '规则设置',
+          permissions: ['CENTER_VICE_GENERAL_MANAGER', 'VICE_PRESIDENT', 'ADMIN'],
           activeMenu: 'rule_index',
         },
         component: () => import('@/views/rule/index.vue'),

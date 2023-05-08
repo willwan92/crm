@@ -39,6 +39,14 @@ const routes: Array<RouteRecordRaw> = [
         name: `customerPool_index`,
         meta: {
           title: '公海池',
+          permissions: [
+            'COMMISSIONER',
+            'MANAGER',
+            'CHIEF_INSPECTOR',
+            'CENTER_VICE_GENERAL_MANAGER',
+            'VICE_PRESIDENT',
+            'ADMIN',
+          ],
           activeMenu: 'customerPool_index',
         },
         component: () => import('@/views/customerPool/index.vue'),

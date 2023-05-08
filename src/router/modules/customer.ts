@@ -39,6 +39,14 @@ const routes: Array<RouteRecordRaw> = [
         name: 'customer_index',
         meta: {
           title: '我的客户',
+          permissions: [
+            'COMMISSIONER',
+            'MANAGER',
+            'CHIEF_INSPECTOR',
+            'CENTER_VICE_GENERAL_MANAGER',
+            'VICE_PRESIDENT',
+            'ADMIN',
+          ],
         },
         component: () => import('@/views/customer/index.vue'),
       },
@@ -47,6 +55,14 @@ const routes: Array<RouteRecordRaw> = [
         name: 'customer_detail',
         meta: {
           title: '客户详情',
+          permissions: [
+            'COMMISSIONER',
+            'MANAGER',
+            'CHIEF_INSPECTOR',
+            'CENTER_VICE_GENERAL_MANAGER',
+            'VICE_PRESIDENT',
+            'ADMIN',
+          ],
           hidden: true,
         },
         component: () => import('@/views/customer/detail.vue'),

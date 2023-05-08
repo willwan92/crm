@@ -39,6 +39,14 @@ const routes: Array<RouteRecordRaw> = [
         name: 'cockpit_index',
         meta: {
           title: '驾驶舱',
+          permissions: [
+            'CHIEF_INSPECTOR',
+            'CENTER_VICE_GENERAL_MANAGER',
+            'AREA_CHIEF_INSPECTOR',
+            'AREA_CHIEF_INSPECTOR',
+            'VICE_PRESIDENT',
+            'ADMIN',
+          ],
           activeMenu: 'cockpit_index',
         },
         component: () => import('@/views/cockpit/index.vue'),
