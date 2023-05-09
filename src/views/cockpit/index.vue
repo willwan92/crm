@@ -125,6 +125,8 @@
         item.percentage = Math.floor((item.count / firstCount) * 100);
         return item;
       });
+    } else {
+      cityData.value = undefined;
     }
 
     if (Array.isArray(projectRankingDTO) && projectRankingDTO.length) {
@@ -133,6 +135,8 @@
         item.percentage = Math.floor((item.count / firstCount) * 100);
         return item;
       });
+    } else {
+      projectData.value = undefined;
     }
 
     if (Array.isArray(accountRankingDTO) && accountRankingDTO.length) {
@@ -141,6 +145,8 @@
         item.percentage = Math.floor((item.count / firstCount) * 100);
         return item;
       });
+    } else {
+      accountData.value = undefined;
     }
   };
   onMounted(loadRankingData);
