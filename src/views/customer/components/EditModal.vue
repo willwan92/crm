@@ -42,6 +42,7 @@
               label-field="label"
               value-field="label"
               :options="customerSourceOptions"
+              :disabled="Boolean(customerId)"
             />
           </n-form-item>
         </n-gi>
