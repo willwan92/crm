@@ -175,6 +175,10 @@
     flex-direction: column;
     height: 100vh;
     overflow: auto;
+    background-image: url('../../assets/images/login-bg-blue.jpg');
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: cover;
 
     &-container {
       flex: 1;
@@ -217,16 +221,10 @@
     }
   }
 
-  @media (min-width: 768px) {
-    .view-account {
-      background-image: url('../../assets/images/login-bg-blue.jpg');
-      background-repeat: no-repeat;
-      background-position: 50%;
-      background-size: cover;
-    }
-
-    .page-account-container {
-      padding: 32px 0 24px 0;
+  @media (max-width: 768px) {
+    .view-account-top {
+      margin-bottom: 20px !important;
+      margin-top: 10px !important;
     }
   }
 </style>
