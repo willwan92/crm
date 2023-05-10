@@ -6,15 +6,18 @@
     label-width="auto"
     require-mark-placement="right-hanging"
   >
-    <n-form-item label="客户所在地区" path="areaId">
+    <n-form-item label="客户所在地区" path="parentIdList">
       <n-cascader
         remote
         clearable
-        check-strategy="child"
-        v-model:value="searchParams.areaId"
-        style="width: 200px"
+        multiple
+        :max-tag-count="1"
+        check-strategy="parent"
+        v-model:value="searchParams.parentIdList"
+        style="width: 300px"
         :options="addrOptions"
         :on-load="handleAreaLoad"
+        :on-update:value="handleAreaIdListUpdate"
       />
     </n-form-item>
     <n-form-item label="所属行业" path="industry">
@@ -71,18 +74,36 @@
   }
 
   interface Req {
-    areaId: string;
+    parentIdList: string[];
+    areaIdList: string[];
     industry: string;
     timerange: [number, number] | null;
   }
 
   const defaultParams = (): Req => ({
-    areaId: '',
+    parentIdList: [],
+    areaIdList: [],
     industry: '',
     timerange: null,
   });
 
   let searchParams = reactive<Req>(defaultParams());
+
+  const handleAreaIdListUpdate = (value, option) => {
+    searchParams.parentIdList = value;
+    let idList: string[] = [];
+    const getAreaIdList = (option) => {
+      option.forEach((item) => {
+        if (item.children) {
+          getAreaIdList(item.children);
+        } else {
+          idList.push(item.value);
+        }
+      });
+    };
+    getAreaIdList(option);
+    searchParams.areaIdList = idList;
+  };
 
   function resetParams() {
     searchParams = Object.assign(unref(searchParams), defaultParams());

@@ -81,7 +81,7 @@
   const loadDataTable = async (params) => {
     const searchParams = searchFormRef.value.searchParams;
     const res = await getpublicPoolCustomers({
-      areaId: searchParams.areaId,
+      areaIdList: searchParams.areaIdList,
       industry: searchParams.industry,
       startTime: searchParams.timerange && searchParams.timerange[0],
       endTime: searchParams.timerange && searchParams.timerange[1],

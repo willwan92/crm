@@ -3,11 +3,11 @@ import { Result } from '@/utils/http/types';
 import { RequestEnum } from '@/enums/httpEnum';
 import { PageRes } from '@/api/models/basic';
 
-export function getpublicPoolCustomers(params) {
+export function getpublicPoolCustomers(data) {
   return http.request<Result<PageRes>>({
     url: '/customer/pool/publicList',
-    method: RequestEnum.GET,
-    params,
+    method: RequestEnum.POST,
+    data,
   });
 }
 
