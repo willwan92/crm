@@ -1,8 +1,9 @@
 <template>
-  <div class="logo">
+  <div :class="[isMobile && 'logo-mobile', 'logo']">
     <!-- <img :src="websiteConfig.logo" alt="" :class="{ 'mr-2': !collapsed }" />
     <h2 v-show="!collapsed" class="title">{{ websiteConfig.title }}</h2> -->
-    <img :src="websiteConfig.logo" alt="" class="mr-2" />
+    <img v-show="!isMobile" :src="websiteConfig.logo" alt="logo" />
+    <img v-show="isMobile" :src="websiteConfig.mobileLogo" alt="logo" />
   </div>
 </template>
 
@@ -12,6 +13,9 @@
     name: 'Index',
     props: {
       collapsed: {
+        type: Boolean,
+      },
+      isMobile: {
         type: Boolean,
       },
     },
@@ -42,5 +46,9 @@
     .title {
       margin-bottom: 0;
     }
+  }
+
+  .logo-mobile {
+    width: 64px;
   }
 </style>

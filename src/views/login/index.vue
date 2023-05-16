@@ -154,7 +154,6 @@
             },
           ];
           const home = roleHomes.find((item) => item.roles.includes(userInfo.roleId));
-          console.log(PageEnum[home]);
           const homepath = PageEnum[home?.path];
           userStore.setHomepage(homepath);
           storage.set(HOME_PATH, homepath);

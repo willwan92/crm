@@ -17,7 +17,7 @@
     </div>
     <!--左侧菜单-->
     <div class="layout-header-left" v-else>
-      <Logo :collapsed="collapsed" />
+      <Logo :collapsed="collapsed" :isMobile="isMobile" />
       <!-- 菜单收起 -->
       <div
         class="ml-1 layout-header-trigger layout-header-trigger-min"
@@ -84,7 +84,7 @@
         </n-tooltip>
       </div> -->
       <!--切换全屏-->
-      <div class="layout-header-trigger layout-header-trigger-min">
+      <div v-if="!isMobile" class="layout-header-trigger layout-header-trigger-min">
         <n-tooltip placement="bottom">
           <template #trigger>
             <n-icon size="18">
@@ -108,7 +108,11 @@
         </n-dropdown>
       </div>
       <!--设置-->
-      <div class="layout-header-trigger layout-header-trigger-min" @click="openSetting">
+      <div
+        v-if="!isMobile"
+        class="layout-header-trigger layout-header-trigger-min"
+        @click="openSetting"
+      >
         <n-tooltip placement="bottom-end">
           <template #trigger>
             <n-icon size="18" style="font-weight: bold">
@@ -157,8 +161,14 @@
       const useLockscreen = useLockscreenStore();
       const message = useMessage();
       const dialog = useDialog();
-      const { getNavMode, getNavTheme, getHeaderSetting, getMenuSetting, getCrumbsSetting } =
-        useProjectSetting();
+      const {
+        getNavMode,
+        getNavTheme,
+        getHeaderSetting,
+        getMenuSetting,
+        getCrumbsSetting,
+        getIsMobile,
+      } = useProjectSetting();
 
       const { userName } = userStore?.info || {};
       const drawerSetting = ref();
@@ -170,6 +180,7 @@
         navTheme: getNavTheme,
         headerSetting: getHeaderSetting,
         crumbsSetting: getCrumbsSetting,
+        isMobile: getIsMobile,
       });
 
       const getInverted = computed(() => {
