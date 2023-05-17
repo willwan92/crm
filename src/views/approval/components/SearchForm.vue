@@ -2,7 +2,7 @@
   <n-form
     ref="searchRef"
     :model="searchParams"
-    inline
+    :inline="!getIsMobile"
     label-placement="left"
     label-width="auto"
     require-mark-placement="right-hanging"
@@ -21,7 +21,7 @@
         placeholder="全部"
       />
     </n-form-item>
-    <n-space>
+    <n-space :justify="getIsMobile ? 'end' : 'start'">
       <n-button type="info" @click="emitReloadTable"> 查询 </n-button>
       <n-button @click="resetParams">重置 </n-button>
     </n-space>
@@ -30,6 +30,9 @@
 
 <script lang="ts" setup>
   import { unref, reactive, defineEmits, defineExpose } from 'vue';
+  import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
+
+  const { getIsMobile } = useProjectSetting();
 
   const statusOptions = [
     {

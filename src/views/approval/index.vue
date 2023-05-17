@@ -6,6 +6,7 @@
       :toolbarShow="false"
       :columns="columns"
       :actionColumn="actionColumn"
+      :scroll-x="1400"
       :request="loadDataTable"
       ref="tableRef"
     />
@@ -103,10 +104,11 @@
   ];
 
   const actionColumn = reactive({
-    width: 200,
+    width: 150,
     title: '审批选项',
     key: 'action',
     align: 'center',
+    fixed: 'right',
     render(row) {
       return row.auditStatus === 'CREATED'
         ? [
