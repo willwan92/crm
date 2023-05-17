@@ -78,16 +78,17 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, h } from 'vue';
+  import { useRouter } from 'vue-router';
   import { BasicTable } from '@/components/Table';
   import { formatToDateTime } from '@/utils/dateUtil';
   import { getRankingList, getCustomerList } from '@/api/cockpit';
   import SearchForm from './components/SearchForm.vue';
   import RankingForm from './components/RankingForm.vue';
-
-  import { useThemeVars } from 'naive-ui';
+  import { useThemeVars, NButton } from 'naive-ui';
 
   const themeVars = useThemeVars();
+  const router = useRouter();
 
   const colors = ref([
     themeVars.value.errorColor,
@@ -167,7 +168,7 @@
     },
     {
       title: '招商角色',
-      key: 'sourceAccountName',
+      key: 'accountPosition',
     },
     {
       title: '招商人员',
@@ -180,6 +181,19 @@
     {
       title: '客户名称',
       key: 'customerName',
+      render(row) {
+        return h(
+          NButton,
+          {
+            type: 'info',
+            text: true,
+            onClick: () => {
+              router.push('/customer/customer_detail/' + row.id);
+            },
+          },
+          { default: () => row.customerName }
+        );
+      },
     },
     {
       title: '需求类型',
