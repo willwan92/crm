@@ -15,9 +15,9 @@
       label-width="auto"
       size="medium"
       require-mark-placement="right-hanging"
-      style="margin: 30px 0 0"
+      style="margin: 30px 0 0; height: 350px; overflow-y: auto"
     >
-      <n-grid x-gap="12" :cols="3">
+      <n-grid x-gap="12" :cols="getIsMobile ? 1 : 3">
         <n-gi>
           <n-form-item label="招商项目" path="accountResourceId">
             <n-select
@@ -203,6 +203,9 @@
   import { CascaderOption } from 'naive-ui';
   import { add, getDetail, update } from '@/api/customer';
   import * as provinceApi from '@/api/province';
+  import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
+
+  const { getIsMobile } = useProjectSetting();
 
   const addrOptions = ref([]);
   provinceApi.getProvinceList().then((res) => {

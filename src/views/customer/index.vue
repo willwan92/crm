@@ -13,6 +13,7 @@
     <BasicTable
       :toolbarShow="false"
       :columns="columns"
+      :scroll-x="1400"
       :request="loadDataTable"
       ref="tableRef"
       :actionColumn="actionColumn"
@@ -29,7 +30,7 @@
 <script lang="ts" setup>
   import { reactive, ref, h } from 'vue';
   import { useRouter } from 'vue-router';
-  import { BasicTable } from '@/components/Table';
+  import { BasicTable, TableAction } from '@/components/Table';
   import { getList, del, throwCustomer } from '@/api/customer';
   import EditModal from './components/EditModal.vue';
   import FollowUpModal from './components/FollowUpModal.vue';
@@ -106,95 +107,76 @@
     },
   ];
 
+  const handleSelectAction = (key: string, row) => {
+    const actions = {
+      showFollowUpModal: showFollowUpModal,
+      showUpgradeModal: showUpgradeModal,
+      showDownModal: showDownModal,
+      showCooperateModal: showCooperateModal,
+      handleDiscardClick: handleDiscardClick,
+      handleDelClick: handleDelClick,
+    };
+    actions[key](row);
+  };
+
   const actionColumn = reactive({
-    width: 200,
+    width: 150,
     title: '操作',
     key: 'action',
     align: 'center',
+    fixed: 'right',
     render(row) {
-      return [
-        h(
-          NButton,
+      return h(TableAction as any, {
+        style: 'button',
+        actions: [
           {
-            size: 'small',
-            type: 'info',
+            label: '编辑',
+            type: 'default',
             tertiary: true,
             style: 'margin-right:5px',
-            onClick: () => showEditModal(row.id),
+            onClick: showEditModal.bind(null, row.id),
           },
-          { default: () => '编辑' }
-        ),
-        h(
-          NButton,
+        ],
+        dropDownActions: [
           {
-            size: 'small',
-            type: 'info',
-            tertiary: true,
-            style: 'margin-right:5px',
-            onClick: () => showFollowUpModal(row.id, row.customerName),
+            label: '跟进',
+            key: 'showFollowUpModal',
           },
-          { default: () => '跟进' }
-        ),
-        row.customerLevel !== 'O' &&
-          h(
-            NButton,
-            {
-              size: 'small',
-              type: 'info',
-              tertiary: true,
-              style: 'margin-right:5px',
-              onClick: () => showUpgradeModal(row),
-            },
-            { default: () => '升级' }
-          ),
-        row.customerLevel < 'D' &&
-          h(
-            NButton,
-            {
-              size: 'small',
-              type: 'info',
-              tertiary: true,
-              style: 'margin-right:5px',
-              onClick: () => showDownModal(row),
-            },
-            { default: () => '降级' }
-          ),
-        row.isCooperated === '自有客户' &&
-          row.customerLevel < 'E' &&
-          h(
-            NButton,
-            {
-              size: 'small',
-              type: 'info',
-              tertiary: true,
-              style: 'margin-right:5px',
-              onClick: () => showCooperateModal(row),
-            },
-            { default: () => '合作' }
-          ),
-        h(
-          NButton,
           {
-            size: 'small',
-            type: 'info',
-            tertiary: true,
-            style: 'margin-right:5px',
-            onClick: () => handleDiscardClick(row),
-          },
-          { default: () => '抛入公海' }
-        ),
-        row.customerLevel === 'E' &&
-          h(
-            NButton,
-            {
-              size: 'small',
-              type: 'error',
-              tertiary: true,
-              onClick: () => handleDelClick(row),
+            label: '升级',
+            key: 'showUpgradeModal',
+            ifShow: () => {
+              return row.customerLevel !== 'O';
             },
-            { default: () => '删除' }
-          ),
-      ];
+          },
+          {
+            label: '降级',
+            key: 'showDownModal',
+            ifShow: () => {
+              return row.customerLevel < 'D';
+            },
+          },
+          {
+            label: '合作',
+            key: 'showCooperateModal',
+            ifShow: () => {
+              return row.isCooperated === '自有客户' && row.customerLevel < 'E';
+            },
+          },
+          {
+            label: '抛入公海',
+            key: 'handleDiscardClick',
+          },
+          {
+            label: '删除',
+            key: 'handleDelClick',
+            ifShow: () => {
+              return row.customerLevel === 'E';
+            },
+          },
+        ],
+        select: (key) => handleSelectAction(key, row),
+      });
     },
   });
 
@@ -232,8 +214,8 @@
   };
 
   const followUpModal = ref();
-  const showFollowUpModal = (id, name) => {
-    followUpModal.value.show(id, name);
+  const showFollowUpModal = (row) => {
+    followUpModal.value.show(row.id, row.customerName);
   };
 
   const cooperateModal = ref();
