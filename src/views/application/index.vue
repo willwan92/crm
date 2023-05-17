@@ -5,6 +5,7 @@
     <BasicTable
       :toolbarShow="false"
       :columns="columns"
+      :scroll-x="1400"
       :request="loadDataTable"
       ref="tableRef"
       :actionColumn="actionColumn"
@@ -68,10 +69,11 @@
   ];
 
   const actionColumn = reactive({
-    width: 220,
+    width: 100,
     title: '操作',
     key: 'action',
     align: 'center',
+    fixed: 'right',
     render(row) {
       return [
         row.auditType === 'UP_DOWN_GRADE' &&
