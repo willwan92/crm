@@ -1,6 +1,12 @@
 <template>
   <n-card :bordered="false" class="proCard">
-    <BasicTable :toolbarShow="false" :columns="columns" :request="loadDataTable" ref="tableRef" />
+    <BasicTable
+      :toolbarShow="false"
+      :columns="columns"
+      :scroll-x="800"
+      :request="loadDataTable"
+      ref="tableRef"
+    />
   </n-card>
 </template>
 
@@ -13,10 +19,11 @@
     {
       title: '序号',
       key: 'index',
-      width: 60,
+      fixed: 'left',
     },
     {
       title: '客户名称',
+      fixed: 'left',
       key: 'customerName',
     },
     {
