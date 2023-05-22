@@ -216,6 +216,7 @@
     const res = await getCustomerList({
       cityId: searchParams.cityId,
       projectId: searchParams.projectId,
+      nameKeyword: searchParams.nameKeyword,
       positionCode: searchParams.positionCode,
       customerLevel: searchParams.customerLevel,
       startTime: searchParams.timerange ? searchParams.timerange[0] : null,

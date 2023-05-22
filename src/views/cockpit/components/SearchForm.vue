@@ -22,6 +22,9 @@
         :options="projects"
       />
     </n-form-item>
+    <n-form-item label="招商人员" path="nameKeyword">
+      <n-input v-model:value="searchParams.nameKeyword" />
+    </n-form-item>
     <n-form-item label="招商角色" path="positionCode">
       <n-select
         v-model:value="searchParams.positionCode"
@@ -120,6 +123,7 @@
   const defaultParams = () => ({
     cityId: null,
     projectId: null,
+    nameKeyword: '',
     positionCode: null,
     customerLevel: null,
     timerange: [startOfDay(subMonths(Date.now(), 1)).getTime(), endOfDay(Date.now()).getTime()],
