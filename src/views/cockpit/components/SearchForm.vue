@@ -9,7 +9,7 @@
     <n-form-item label="所属城市" path="cityId">
       <n-select
         v-model:value="searchParams.cityId"
-        style="width: 150px"
+        style="width: 80px"
         clearable
         :options="cities"
       />
@@ -17,20 +17,20 @@
     <n-form-item label="所属项目" path="projectId">
       <n-select
         v-model:value="searchParams.projectId"
-        style="width: 150px"
+        style="width: 100px"
         clearable
         :options="projects"
       />
     </n-form-item>
     <n-form-item label="招商人员" path="nameKeyword">
-      <n-input v-model:value="searchParams.nameKeyword" />
+      <n-input v-model:value="searchParams.nameKeyword" style="width: 80px" />
     </n-form-item>
     <n-form-item label="招商角色" path="positionCode">
       <n-select
         v-model:value="searchParams.positionCode"
         label-field="positionName"
         value-field="positionCode"
-        style="width: 150px"
+        style="width: 100px"
         clearable
         :options="accoutPositionOptions"
       />
@@ -42,12 +42,16 @@
         value-field="label"
         clearable
         :options="levelOptions"
-        style="width: 120px"
+        style="width: 70px"
         placeholder="全部"
       />
     </n-form-item>
     <n-form-item label="时间范围" path="timerange">
-      <n-date-picker v-model:value="searchParams.timerange" type="datetimerange" />
+      <n-date-picker
+        v-model:value="searchParams.timerange"
+        type="datetimerange"
+        style="width: 350px"
+      />
     </n-form-item>
     <n-space>
       <n-button type="info" @click="emitReloadTable"> 查询 </n-button>
