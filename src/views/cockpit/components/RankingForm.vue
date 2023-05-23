@@ -1,7 +1,7 @@
 <template>
   <n-form
     :model="rankingParams"
-    inline
+    :inline="!getIsMobile"
     label-placement="left"
     label-width="auto"
     require-mark-placement="right-hanging"
@@ -17,10 +17,13 @@
         placeholder="全部"
       />
     </n-form-item>
-    <n-form-item label="时间范围" path="timerange">
-      <n-date-picker v-model:value="rankingParams.timerange" type="datetimerange" clearable />
+    <n-form-item label="起始时间">
+      <n-date-picker v-model:value="rankingParams.timerange[0]" type="datetime" clearable />
     </n-form-item>
-    <n-space>
+    <n-form-item label="截止时间">
+      <n-date-picker v-model:value="rankingParams.timerange[1]" type="datetime" clearable />
+    </n-form-item>
+    <n-space :justify="getIsMobile ? 'end' : 'start'">
       <n-button type="info" @click="emitReloadTable"> 查询 </n-button>
       <n-button @click="resetParams">重置 </n-button>
     </n-space>
@@ -29,7 +32,10 @@
 
 <script lang="ts" setup>
   import { subMonths, startOfDay, endOfDay } from 'date-fns';
-  import { unref, reactive, defineExpose } from 'vue';
+  import { unref, reactive } from 'vue';
+  import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
+
+  const { getIsMobile } = useProjectSetting();
 
   const levelOptions = [
     {

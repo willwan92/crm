@@ -76,7 +76,7 @@
               </div>
             </div>
           </n-layout-content>
-          <n-back-top :right="100" />
+          <n-back-top :right="20" />
         </n-layout>
       </n-layout>
       <n-layout-footer :inverted="getHeaderInverted" :position="fixedHeader">

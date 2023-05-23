@@ -1,7 +1,7 @@
 <template>
   <n-form
     :model="searchParams"
-    inline
+    :inline="!getIsMobile"
     label-placement="left"
     label-width="auto"
     require-mark-placement="right-hanging"
@@ -9,7 +9,7 @@
     <n-form-item label="所属城市" path="cityId">
       <n-select
         v-model:value="searchParams.cityId"
-        style="width: 80px"
+        style="width: 100px"
         clearable
         :options="cities"
       />
@@ -22,9 +22,6 @@
         :options="projects"
       />
     </n-form-item>
-    <n-form-item label="招商人员" path="nameKeyword">
-      <n-input v-model:value="searchParams.nameKeyword" style="width: 80px" />
-    </n-form-item>
     <n-form-item label="招商角色" path="positionCode">
       <n-select
         v-model:value="searchParams.positionCode"
@@ -35,6 +32,9 @@
         :options="accoutPositionOptions"
       />
     </n-form-item>
+    <n-form-item label="招商人员" path="nameKeyword">
+      <n-input v-model:value="searchParams.nameKeyword" style="width: 100px" />
+    </n-form-item>
     <n-form-item label="客户等级" path="customerLevel">
       <n-select
         v-model:value="searchParams.customerLevel"
@@ -42,18 +42,17 @@
         value-field="label"
         clearable
         :options="levelOptions"
-        style="width: 70px"
+        style="width: 100px"
         placeholder="全部"
       />
     </n-form-item>
-    <n-form-item label="时间范围" path="timerange">
-      <n-date-picker
-        v-model:value="searchParams.timerange"
-        type="datetimerange"
-        style="width: 350px"
-      />
+    <n-form-item label="起始时间">
+      <n-date-picker v-model:value="searchParams.timerange[0]" type="datetime" clearable />
     </n-form-item>
-    <n-space>
+    <n-form-item label="截止时间">
+      <n-date-picker v-model:value="searchParams.timerange[1]" type="datetime" clearable />
+    </n-form-item>
+    <n-space :justify="getIsMobile ? 'end' : 'start'">
       <n-button type="info" @click="emitReloadTable"> 查询 </n-button>
       <n-button @click="resetParams">重置 </n-button>
     </n-space>
@@ -65,6 +64,9 @@
   import { getCitiesByCurrentUser, getProjectsByCurrentUser } from '@/api/project';
   import { unref, reactive, ref, defineExpose, watch } from 'vue';
   import { subMonths, startOfDay, endOfDay } from 'date-fns';
+  import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
+
+  const { getIsMobile } = useProjectSetting();
 
   const levelOptions = [
     {

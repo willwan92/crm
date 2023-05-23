@@ -1,7 +1,7 @@
 <template>
   <n-card title="客户排名" style="margin-bottom: 12px">
     <RankingForm ref="rankingFormRef" @reload-ranking="loadRankingData" />
-    <n-grid x-gap="80" :cols="3">
+    <n-grid :x-gap="getIsMobile ? 20 : 80" :cols="3">
       <n-gi class="ranking-item">
         <div class="title-wrapper">
           <n-button strong secondary type="info" class="title"> 城市排名 </n-button>
@@ -73,7 +73,13 @@
   </n-card>
   <n-card title="客户总览" style="margin-bottom: 12px">
     <SearchForm ref="searchFormRef" @reload-table="reloadTable" />
-    <BasicTable :toolbarShow="false" :columns="columns" :request="loadDataTable" ref="tableRef" />
+    <BasicTable
+      :toolbarShow="false"
+      :columns="columns"
+      :scroll-x="1400"
+      :request="loadDataTable"
+      ref="tableRef"
+    />
   </n-card>
 </template>
 
@@ -86,6 +92,9 @@
   import SearchForm from './components/SearchForm.vue';
   import RankingForm from './components/RankingForm.vue';
   import { useThemeVars, NButton } from 'naive-ui';
+  import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
+
+  const { getIsMobile } = useProjectSetting();
 
   const themeVars = useThemeVars();
   const router = useRouter();
@@ -155,8 +164,9 @@
   const columns = [
     {
       title: '序号',
-      width: 100,
+      width: 80,
       key: 'index',
+      fixed: 'left',
     },
     {
       title: '所属城市',
@@ -175,10 +185,6 @@
       key: 'sourceAccountName',
     },
     {
-      title: '客户等级',
-      key: 'customerLevel',
-    },
-    {
       title: '客户名称',
       key: 'customerName',
       render(row) {
@@ -194,6 +200,12 @@
           { default: () => row.customerName }
         );
       },
+    },
+    {
+      title: '客户等级',
+      width: 80,
+      align: 'center',
+      key: 'customerLevel',
     },
     {
       title: '需求类型',
