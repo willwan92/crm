@@ -2,14 +2,15 @@
   <n-form
     :model="searchParams"
     :inline="!getIsMobile"
-    label-placement="left"
+    :label-placement="getIsMobile ? 'left' : 'top'"
     label-width="auto"
+    :item-responsive="false"
     require-mark-placement="right-hanging"
   >
-    <n-form-item label="所属城市" path="cityId">
+    <n-form-item label="所属城市" path="cityId" span="0 m:1 l:2">
       <n-select
         v-model:value="searchParams.cityId"
-        style="width: 100px"
+        style="width: 120px"
         clearable
         :options="cities"
       />
@@ -17,7 +18,7 @@
     <n-form-item label="所属项目" path="projectId">
       <n-select
         v-model:value="searchParams.projectId"
-        style="width: 100px"
+        style="width: 214px"
         clearable
         :options="projects"
       />
@@ -27,13 +28,13 @@
         v-model:value="searchParams.positionCode"
         label-field="positionName"
         value-field="positionCode"
-        style="width: 100px"
+        style="width: 120px"
         clearable
         :options="accoutPositionOptions"
       />
     </n-form-item>
     <n-form-item label="招商人员" path="nameKeyword">
-      <n-input v-model:value="searchParams.nameKeyword" style="width: 100px" />
+      <n-input v-model:value="searchParams.nameKeyword" style="width: 120px" />
     </n-form-item>
     <n-form-item label="客户等级" path="customerLevel">
       <n-select
@@ -42,7 +43,7 @@
         value-field="label"
         clearable
         :options="levelOptions"
-        style="width: 100px"
+        style="width: 120px"
         placeholder="全部"
       />
     </n-form-item>
@@ -52,11 +53,11 @@
     <n-form-item label="截止时间">
       <n-date-picker v-model:value="searchParams.timerange[1]" type="datetime" clearable />
     </n-form-item>
-    <n-space :justify="getIsMobile ? 'end' : 'start'">
-      <n-button type="info" @click="emitReloadTable"> 查询 </n-button>
-      <n-button @click="resetParams">重置 </n-button>
-    </n-space>
   </n-form>
+  <n-space :justify="getIsMobile ? 'end' : 'start'">
+    <n-button type="info" @click="emitReloadTable"> 查询 </n-button>
+    <n-button @click="resetParams">重置 </n-button>
+  </n-space>
 </template>
 
 <script lang="ts" setup>
