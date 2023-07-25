@@ -1,23 +1,32 @@
 <template>
   <n-card title="客户排名" style="margin-bottom: 12px">
-    <RankingForm ref="rankingFormRef" @reload-ranking="loadRankingData" />
-    <n-grid :x-gap="getIsMobile ? 20 : 80" :cols="3">
+    <RankingForm ref="rankingFormRef" @reload-ranking="handleQueryClick" />
+    <n-grid :x-gap="getIsMobile ? 20 : 80" :cols="getIsMobile ? 1 : 3">
       <n-gi class="ranking-item">
         <div class="title-wrapper">
           <n-button strong secondary type="info" class="title"> 城市排名 </n-button>
+          （合计：{{ totalArea.city }} m²）
         </div>
         <div v-if="cityData?.length" class="content-wrapper">
-          <div v-for="(item, index) in cityData" :key="item.name">
-            <span :style="{ color: getColor(index) }">N0.{{ index + 1 }} {{ item.name }}</span>
+          <div
+            v-for="(item, index) in cityData"
+            :key="item.name"
+            @click="handleCityClick(index)"
+            :class="['item', index === selectedCityIndex && 'selected-item']"
+          >
+            <span :style="{ color: getColor(index) }">
+              N0.{{ index + 1 }}. {{ item.name }} （{{ item.totalArea }}m²）
+            </span>
             <n-progress
               type="line"
               class="progress"
+              rail-color="#fff"
               :percentage="item.percentage"
               :color="getColor(index)"
-              rail-color="#fff"
+              :height="index === selectedCityIndex ? 10 : 8"
               :indicator-text-color="getColor(index)"
             >
-              {{ item.count }} 个
+              <span>{{ item.count }} 个</span>
             </n-progress>
           </div>
         </div>
@@ -28,15 +37,24 @@
       <n-gi class="ranking-item">
         <div class="title-wrapper">
           <n-button strong secondary type="info" class="title"> 项目排名 </n-button>
+          （合计：{{ totalArea.project }} m²）
         </div>
         <div v-if="projectData?.length" class="content-wrapper">
-          <div v-for="(item, index) in projectData" :key="item.name">
-            <span :style="{ color: getColor(index) }">N0.{{ index + 1 }} {{ item.name }}</span>
+          <div
+            v-for="(item, index) in projectData"
+            :key="item.name"
+            :class="['item', index === selectedProjIndex && 'selected-item']"
+            @click="handleProjClick(index)"
+          >
+            <span :style="{ color: getColor(index) }">
+              N0.{{ index + 1 }}. {{ item.name }} （{{ item.totalArea }}m²）
+            </span>
             <n-progress
               type="line"
               class="progress"
               :percentage="item.percentage"
               :color="getColor(index)"
+              :height="index === selectedProjIndex ? 10 : 8"
               rail-color="#fff"
               :indicator-text-color="getColor(index)"
             >
@@ -50,10 +68,13 @@
       <n-gi class="ranking-item">
         <div class="title-wrapper">
           <n-button strong secondary type="info" class="title"> 人员排名 </n-button>
+          （合计：{{ totalArea.account }} m²）
         </div>
         <div v-if="accountData?.length" class="content-wrapper">
           <div v-for="(item, index) in accountData" :key="item.name">
-            <span :style="{ color: getColor(index) }">N0.{{ index + 1 }} {{ item.name }}</span>
+            <span :style="{ color: getColor(index) }">
+              N0.{{ index + 1 }}. {{ item.name }} （{{ item.totalArea }}m²）
+            </span>
             <n-progress
               type="line"
               class="progress"
@@ -84,7 +105,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, h } from 'vue';
+  import { ref, onMounted, h, reactive, unref } from 'vue';
   import { useRouter } from 'vue-router';
   import { BasicTable } from '@/components/Table';
   import { formatToDateTime } from '@/utils/dateUtil';
@@ -111,9 +132,11 @@
   };
 
   interface rankingData {
+    id: number;
     name: string;
     count: number;
     percentage: number;
+    totalArea: string;
   }
 
   const cityData = ref<rankingData[]>();
@@ -121,17 +144,27 @@
   const accountData = ref<rankingData[]>();
 
   const rankingFormRef = ref();
+  const defaultTotalArea = () => ({
+    city: 0,
+    project: 0,
+    account: 0,
+  });
+  let totalArea = reactive(defaultTotalArea());
   const loadRankingData = async () => {
     const rankingParams = rankingFormRef.value.rankingParams;
     const { cityRankingDTO, projectRankingDTO, accountRankingDTO } = await getRankingList({
       customerLevel: rankingParams.customerLevel,
+      cityId: (cityData.value && cityData.value[selectedCityIndex.value]?.id) || null,
+      projectId: (projectData.value && projectData.value[selectedProjIndex.value]?.id) || null,
       startTime: rankingParams.timerange ? rankingParams.timerange[0] : null,
       endTime: rankingParams.timerange ? rankingParams.timerange[1] : null,
     });
 
+    totalArea = Object.assign(unref(totalArea), defaultTotalArea());
     if (Array.isArray(cityRankingDTO) && cityRankingDTO.length) {
       const firstCount = cityRankingDTO[0].count;
       cityData.value = cityRankingDTO.map((item) => {
+        totalArea.city += Number(item.totalArea);
         item.percentage = Math.floor((item.count / firstCount) * 100);
         return item;
       });
@@ -142,6 +175,7 @@
     if (Array.isArray(projectRankingDTO) && projectRankingDTO.length) {
       const firstCount = projectRankingDTO[0].count;
       projectData.value = projectRankingDTO.map((item) => {
+        totalArea.project += Number(item.totalArea);
         item.percentage = Math.floor((item.count / firstCount) * 100);
         return item;
       });
@@ -152,6 +186,7 @@
     if (Array.isArray(accountRankingDTO) && accountRankingDTO.length) {
       const firstCount = accountRankingDTO[0].count;
       accountData.value = accountRankingDTO.map((item) => {
+        totalArea.account += Number(item.totalArea);
         item.percentage = Math.floor((item.count / firstCount) * 100);
         return item;
       });
@@ -160,6 +195,24 @@
     }
   };
   onMounted(loadRankingData);
+
+  const selectedCityIndex = ref(-1);
+  const handleCityClick = (index) => {
+    selectedCityIndex.value = selectedCityIndex.value !== index ? index : -1;
+    loadRankingData();
+  };
+
+  const selectedProjIndex = ref(-1);
+  const handleProjClick = (index) => {
+    selectedProjIndex.value = selectedProjIndex.value !== index ? index : -1;
+    loadRankingData();
+  };
+
+  const handleQueryClick = () => {
+    selectedCityIndex.value = -1;
+    selectedProjIndex.value = -1;
+    loadRankingData();
+  };
 
   const columns = [
     {
@@ -251,6 +304,7 @@
 
 <style lang="less" scoped>
   .ranking-item {
+    margin-bottom: 20px;
     .title-wrapper {
       .title {
         margin-top: 20px;
@@ -258,13 +312,21 @@
       }
     }
     .content-wrapper {
-      height: 200px;
+      max-height: 200px;
       overflow-y: hidden;
       &:hover {
         overflow-y: auto;
       }
       .progress {
         width: 100%;
+      }
+
+      .item {
+        cursor: pointer;
+      }
+      .selected-item {
+        font-weight: bold;
+        font-size: 16px;
       }
     }
 
