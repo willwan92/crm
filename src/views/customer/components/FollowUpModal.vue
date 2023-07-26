@@ -44,7 +44,7 @@
           trigger: ['blur', 'input'],
           message: '请输入跟进事件',
         }"
-        style="margin-top: -26px"
+        :style="{ 'margin-top': getIsMobile ? '-26px' : 0 }"
       >
         <n-input v-model:value="item.followUpDesc" placeholder="跟进事件" style="width: 360px" />
       </n-form-item>
